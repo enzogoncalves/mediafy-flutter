@@ -13,8 +13,10 @@ import 'package:mediafy/models/media_functions_model.dart';
 import 'package:mediafy/models/movie_model.dart';
 import 'dart:ui' as ui;
 
-class MovieScreen extends StatelessWidget {
-  const MovieScreen({super.key});
+import 'package:mediafy/models/tvshow_model.dart';
+
+class TvShowScreen extends StatelessWidget {
+  const TvShowScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +24,24 @@ class MovieScreen extends StatelessWidget {
     return SafeArea(
       child: BlocBuilder<AppCubit, CubitStates>(
         builder: (context, state) {
-          if(state is MovieState) {
-            MovieDetails movie = state.details;
+          if(state is TvShowState) {
+            TvShowDetails tvShow = state.details;
             List<Cast> cast = state.cast; 
             List<Crew> crew = state.crew;
             List<Keyword> keywords = state.keywords;
-            List<Movie> recommendations = state.recommendations;
+            List<TvShow> recommendations = state.recommendations;
             MediaFunctions mediaFunctions = MediaFunctions();
+ 
+
 
             return Scaffold(
               appBar: AppBar(
-                title: Text(movie.original_title!),
+                title: Text(tvShow.original_name!),
                 centerTitle: true,
                 actions: [
                   IconButton(
                     onPressed: () {
-                      BlocProvider.of<AppCubit>(context).goToMoviesPage();            
+                      BlocProvider.of<AppCubit>(context).goToTvSeriesPage();            
                     }, 
                     icon: Icon(Icons.arrow_back)
                   )
@@ -57,7 +61,7 @@ class MovieScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: NetworkImage(
-                                    "https://image.tmdb.org/t/p/original${movie.backdrop_path}"
+                                    "https://image.tmdb.org/t/p/original${tvShow.backdrop_path}"
                                   ),
                                   opacity: .4,
                                   fit: BoxFit.cover,
@@ -96,7 +100,7 @@ class MovieScreen extends StatelessWidget {
                                       borderRadius: const BorderRadius.all(Radius.circular(5)),
                                       image: DecorationImage(
                                         image: NetworkImage(
-                                          "https://image.tmdb.org/t/p/original${movie.poster_path}"
+                                          "https://image.tmdb.org/t/p/original${tvShow.poster_path}"
                                         )
                                       )
                                     ),
@@ -109,7 +113,7 @@ class MovieScreen extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          movie.title!,
+                                          tvShow.original_name!,
                                           style: const TextStyle(
                                             overflow: TextOverflow.clip,
                                             color: Colors.white,
@@ -121,7 +125,7 @@ class MovieScreen extends StatelessWidget {
                                         const SizedBox(height: 4,),
                                   
                                         Text(
-                                          "(${movie.release_date!.substring(0, 4)})",
+                                          "(${tvShow.first_air_date!.substring(0, 4)})",
                                           style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 20
@@ -136,18 +140,18 @@ class MovieScreen extends StatelessWidget {
                               const SizedBox(height: 12,),
 
                               Wrap(
+                                spacing: 16,
+                                runSpacing: 16,
                                 children: [
                                   Text(
-                                    mediaFunctions.formatDate(movie.release_date!)["date"],
+                                    mediaFunctions.formatDate(tvShow.first_air_date!)["date"],
                                     style: const TextStyle(
                                       color: Colors.white
                                     ),
                                   ),
 
-                                  const SizedBox(width: 16,),
-
                                   Wrap(
-                                    children: mediaFunctions.formatGenres(movie.genres).split('').map((genre) {
+                                    children: mediaFunctions.formatGenres(tvShow.genres).split('').map((genre) {
                                       return Text(
                                         genre,
                                         style: const TextStyle(
@@ -157,32 +161,24 @@ class MovieScreen extends StatelessWidget {
                                     }).toList(),
                                   ),
 
-                                  // Text(
-                                  //   movie.formatGenres(movie.genres),
-                                  //   style: const TextStyle(
-                                  //     color: Colors.white
-                                  //   ),
-                                  // ),
-                                  
-                                  const SizedBox(width: 16,),
-
-                                  Text(
-                                    mediaFunctions.formatMediaDuration(movie.runtime),
+                                  tvShow.episode_run_time!.isNotEmpty 
+                                  ? Text(
+                                   tvShow.episode_run_time![0].toString(),
                                     style: const TextStyle(
                                       color: Colors.white
                                     ),
-                                  ),
+                                  ) : Container()
                                 ],
                               ),
 
 
-                              movie.tagline!.isNotEmpty 
+                              tvShow.tagline!.isNotEmpty 
                               ? Column(
                                 children: [
                                   const SizedBox(height: 20,),
 
                                   Text(
-                                    movie.tagline!,
+                                    tvShow.tagline!,
                                     style: TextStyle(
                                       color: Colors.grey[400],
                                       fontStyle: FontStyle.italic
@@ -199,7 +195,7 @@ class MovieScreen extends StatelessWidget {
                                 children: [
                                   const TitleLarge("Synopse"),
                                   Text(
-                                    movie.overview!,
+                                    tvShow.overview!,
                                     style: const TextStyle(
                                       color: Colors.white
                                     ),
@@ -325,7 +321,7 @@ class MovieScreen extends StatelessWidget {
 
                     recommendations.isNotEmpty ? const SizedBox(height: 20,) : Container(),
 
-                    // Movie Recommendaitions
+                    // TvShow Recommendaitions
                     recommendations.isNotEmpty ? Container(
                       padding: const EdgeInsets.all(8),
                       child: Column(
@@ -341,7 +337,7 @@ class MovieScreen extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             itemCount: recommendations.length,
                             itemBuilder: (context, index) {
-                              Movie movieRecommendation = recommendations[index];
+                              TvShow tvShowRecommendations = recommendations[index];
                               double posterHeight = 180;
 
                               return Column(
@@ -349,7 +345,7 @@ class MovieScreen extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: (){
-                                     context.read<AppCubit>().showMoviePage(movieRecommendation.id!);
+                                     context.read<AppCubit>().showTvShowPage(tvShowRecommendations.id!);
                                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                     },
                                     child: Container(
@@ -359,7 +355,7 @@ class MovieScreen extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                            "https://image.tmdb.org/t/p/w300${movieRecommendation.poster_path}"
+                                            "https://image.tmdb.org/t/p/w300${tvShowRecommendations.poster_path}"
                                           )
                                         )
                                       ),
@@ -370,7 +366,7 @@ class MovieScreen extends StatelessWidget {
                                     padding: const EdgeInsets.all(2),
                                     width: posterHeight / 1.5,
                                     child: Text(
-                                      movieRecommendation.original_title!,
+                                      tvShowRecommendations.original_name!,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
@@ -398,13 +394,13 @@ class MovieScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MediaDetail(header: "Status", data: movie.status!),
+                            MediaDetail(header: "Status", data: tvShow.status!),
                             const SizedBox(height: 16,),
-                            MediaDetail(header: "Original Language", data: movie.original_language!),
+                            MediaDetail(header: "Original Language", data: tvShow.original_language!),
                             const SizedBox(height: 16,),
-                            MediaDetail(header: "Budget", data: '\$${NumberFormat.decimalPattern('de-DE').format(movie.budget!).toString()}'),
+                            MediaDetail(header: "Number of Seasons", data: tvShow.number_of_seasons.toString()),
                             const SizedBox(height: 16,),
-                            MediaDetail(header: "Revenue", data: '\$${NumberFormat.decimalPattern('de-DE').format(movie.revenue!).toString()}'),
+                            MediaDetail(header: "Number of Episodes", data: tvShow.number_of_episodes.toString()),
                             keywords.isNotEmpty ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

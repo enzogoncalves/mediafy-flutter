@@ -2,30 +2,65 @@ import 'package:bloc/bloc.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/models/cast_model.dart';
 import 'package:mediafy/models/crew_model.dart';
+import 'package:mediafy/models/keywords_model.dart';
 import 'package:mediafy/models/movie_model.dart';
+import 'package:mediafy/models/tvshow_model.dart';
 import 'package:mediafy/screens/movie_screen.dart';
 import 'package:mediafy/services/media_services.dart';
 
 class AppCubit extends Cubit<CubitStates> {
   AppCubit({ required this.media}) : super(InitialState()) {
-    emit(LoadingState());
-    Future.wait([media.getTopRatedMovies(), media.getTrendingMovies(), media.getUpcomingMovies()]).then((value) {
-      topRatedMovies = value[0];
-      trendingMovies = value[1];
-      upcomingMovies = value[2];
-
-      emit(MoviesState(topRatedMovies: topRatedMovies, trendingMovies: trendingMovies, upcomingMovies: upcomingMovies));
-    });
+    goToMoviesPage();
   }
 
 
   MediaServices media;
-  late List<Movie> topRatedMovies;
-  late List<Movie> trendingMovies;
-  late List<Movie> upcomingMovies;
+  List<Movie>? topRatedMovies;
+  List<Movie>? trendingMovies;
+  List<Movie>? upcomingMovies;
 
-  goToHomePage() {
-    emit(MoviesState(topRatedMovies: topRatedMovies, trendingMovies: trendingMovies, upcomingMovies: upcomingMovies));
+
+  List<TvShow>? trendingTvShows;
+  List<TvShow>? topRatedTvShows;
+
+  goToMoviesPage() {
+    if(topRatedMovies != null) {
+      emit(MoviesState(topRatedMovies: topRatedMovies!, trendingMovies: trendingMovies!, upcomingMovies: upcomingMovies!)); 
+      return;
+    }
+  
+    emit(LoadingState());
+    
+    Future.wait([
+      media.getTopRatedMovies(),
+      media.getTrendingMovies(),
+      media.getUpcomingMovies()
+    ]).then((value) {
+      topRatedMovies = value[0];
+      trendingMovies = value[1];
+      upcomingMovies = value[2];
+      
+      emit(MoviesState(topRatedMovies: topRatedMovies!, trendingMovies: trendingMovies!, upcomingMovies: upcomingMovies!)); 
+    });
+  }
+
+  goToTvSeriesPage() {
+    emit(LoadingState());
+
+    if(trendingTvShows != null && topRatedTvShows != null) {
+      emit(TvShowsState(trendingTvShows: trendingTvShows!, topRatedTvShows: topRatedTvShows!));
+      return;
+    }
+
+    Future.wait([
+      media.getTrendingTvShows(),
+      media.getTopRatedTvShows()
+    ]).then((value) {
+      trendingTvShows = value[0];
+      topRatedTvShows = value[1];
+
+      emit(TvShowsState(trendingTvShows: trendingTvShows!, topRatedTvShows: topRatedTvShows!));
+    });
   }
 
   showMoviePage(int movieId) async {
@@ -56,10 +91,49 @@ class AppCubit extends Cubit<CubitStates> {
     List<Movie> recommendations = movieData[3] as List<Movie>;
 
     if(currentState == "MoviesState") {
-      emit(MovieState(details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations));
+      emit(MovieState(movieId: movieId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations));
     } else if (currentState == "MovieState") {
-      MovieState recommendationMovie = MovieState(details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations);
+      MovieState recommendationMovie = MovieState(movieId: movieId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations);
       emit(recommendationMovie);
     }
+  }
+
+  showTvShowPage(int tvShowId) async {
+    late String currentState;
+
+    if(this.state is TvShowsState) {
+      currentState = "TvShowsState";
+    } else if (this.state is TvShowState) {
+      currentState = "TvShowState";
+    }
+
+    emit(LoadingState());
+
+    List tvShowData = await Future.wait([
+      media.getTvShowDetails(tvShowId), 
+      media.getTvShowCredits(tvShowId), 
+      media.getTvShowKeywords(tvShowId), 
+      media.getTvShowRecommendations(tvShowId)
+    ]);
+
+    TvShowDetails details = tvShowData[0] as TvShowDetails;
+    Map<String, dynamic> credits = tvShowData[1] as Map<String, dynamic>;
+
+    List<Cast> cast = credits['cast'];
+    List<Crew> crew = credits['crew'];
+
+    List<Keyword> keywords = tvShowData[2] as List<Keyword>;
+    List<TvShow> recommendations = tvShowData[3] as List<TvShow>;
+
+    if(currentState == "TvShowsState") {
+      emit(TvShowState(tvShowId: tvShowId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations));
+    } else if (currentState == "TvShowState") {
+      TvShowState recommendationTvShow = TvShowState(tvShowId: tvShowId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations);
+      emit(recommendationTvShow);
+    }
+  }
+
+  goToSearchPage() {
+    emit(SearchPageState());
   }
 }

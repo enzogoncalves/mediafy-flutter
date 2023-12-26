@@ -6,9 +6,9 @@ import 'package:mediafy/services/media_services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future main() async {
-  runApp(const MyApp());
-
   await dotenv.load(fileName: ".env");
+  
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

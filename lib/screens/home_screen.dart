@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mediafy/cubit/cubits.dart';
 import 'package:mediafy/misc/colors.dart';
 import 'package:mediafy/pages/movies_page.dart';
 import 'package:mediafy/pages/search_page.dart';
 import 'package:mediafy/pages/tv_shows_page.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key, required this.page});
+
+  int page;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int pageIndex = 1;
-
   List<Widget> pages = const [
     TvShowsPage(),
-    HomePage(),
+    MoviesPage(),
     SearchPage()
   ];
 
@@ -27,9 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.mainColor,
         bottomNavigationBar: BottomNavigationBar(
           onTap: (index){
-            setState(() {
-              pageIndex = index;
-            });
+            if(index == widget.page) return;
+
+            if(index == 0) {
+              BlocProvider.of<AppCubit>(context).goToTvSeriesPage();
+            } else if (index == 1) {
+              BlocProvider.of<AppCubit>(context).goToMoviesPage();
+            } else if (index == 2) {
+              BlocProvider.of<AppCubit>(context).goToSearchPage();
+            }
           },
           type: BottomNavigationBarType.fixed,
           backgroundColor: AppColors.mainColor,
@@ -37,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
           unselectedItemColor: Colors.grey.withOpacity(0.5),
           iconSize: 32,
           elevation: 0,
-          currentIndex: pageIndex,
+          currentIndex: widget.page,
           items: const [
             BottomNavigationBarItem(
               label: "Tv Shows",
@@ -54,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           ],
         ),
-        body: pages[pageIndex]
+        body: pages[widget.page]
       ),
     );
   }

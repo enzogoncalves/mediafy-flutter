@@ -2,10 +2,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
+import 'package:mediafy/models/media_functions_model.dart';
 import 'package:mediafy/models/movie_model.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MoviesPage extends StatelessWidget {
+  const MoviesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +17,7 @@ class HomePage extends StatelessWidget {
           List<Movie> trendingMovies = state.trendingMovies;
           List<Movie> topRatedMovies = state.topRatedMovies;
           List<Movie> upcomingMovies = state.upcomingMovies;
+          MediaFunctions mediaFunctions = MediaFunctions();
 
           return Container(
             margin: const EdgeInsets.only(left: 10, top: 10),
@@ -226,6 +228,7 @@ class HomePage extends StatelessWidget {
                                   children: [
                                     Text(
                                       upcomingMovie.original_title!,
+                                      
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
@@ -234,7 +237,7 @@ class HomePage extends StatelessWidget {
                                     ),
 
                                     Text(
-                                      upcomingMovie.transformReleaseDate(upcomingMovie.release_date!),
+                                      mediaFunctions.transformReleaseDate(upcomingMovie.release_date!),
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12
