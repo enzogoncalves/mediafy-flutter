@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
 import 'package:mediafy/models/movie_model.dart';
@@ -58,7 +59,8 @@ class TvShowsPage extends StatelessWidget {
                                   BlocProvider.of<AppCubit>(context).showTvShowPage(trendingTvShow.id!);
                                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                 },
-                                child: Container(
+                                child: trendingTvShow.poster_path != null
+                                ? Container(
                                   margin: const EdgeInsets.only(right: 8),
                                   width: posterHeight / 1.5,
                                   height: posterHeight,
@@ -69,7 +71,7 @@ class TvShowsPage extends StatelessWidget {
                                       )
                                     )
                                   ),
-                                ),
+                                ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: false)
                               ),
 
                               Container(
@@ -121,35 +123,36 @@ class TvShowsPage extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         itemCount: topRatedTvShows.length,
                         itemBuilder: (context, index) {
-                          TvShow topRatedMovie = topRatedTvShows[index];
+                          TvShow topRatedTvShow = topRatedTvShows[index];
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               GestureDetector(
                                 onTap: (){
-                                  BlocProvider.of<AppCubit>(context).showTvShowPage(topRatedMovie.id!);
+                                  BlocProvider.of<AppCubit>(context).showTvShowPage(topRatedTvShow.id!);
                                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                 },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: posterHeight / 1.5,
-                                  height: posterHeight,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        "https://image.tmdb.org/t/p/w300${topRatedMovie.poster_path}"
+                                child: topRatedTvShow.poster_path != null
+                                  ? Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    width: posterHeight / 1.5,
+                                    height: posterHeight,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          "https://image.tmdb.org/t/p/w300${topRatedTvShow.poster_path}"
+                                        )
                                       )
-                                    )
-                                  ),
-                                ),
+                                    ),
+                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: false)
                               ),
 
                               Container(
                                 padding: const EdgeInsets.all(2),
                                 width: posterHeight / 1.5,
                                 child: Text(
-                                  topRatedMovie.original_name!,
+                                  topRatedTvShow.original_name!,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,

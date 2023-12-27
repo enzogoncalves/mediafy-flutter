@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mediafy/components/mediaDetails.dart';
+import 'package:mediafy/components/noCastProfilePath.dart';
 import 'package:mediafy/components/title_large.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
@@ -32,7 +33,7 @@ class TvShowScreen extends StatelessWidget {
             List<TvShow> recommendations = state.recommendations;
             MediaFunctions mediaFunctions = MediaFunctions();
  
-
+            print(cast);
 
             return Scaffold(
               appBar: AppBar(
@@ -41,7 +42,7 @@ class TvShowScreen extends StatelessWidget {
                 actions: [
                   IconButton(
                     onPressed: () {
-                      BlocProvider.of<AppCubit>(context).goToTvSeriesPage();            
+                      BlocProvider.of<AppCubit>(context).backToPreviousTvShow();            
                     }, 
                     icon: Icon(Icons.arrow_back)
                   )
@@ -121,16 +122,21 @@ class TvShowScreen extends StatelessWidget {
                                             fontWeight: FontWeight.bold
                                           ),
                                         ),
-                                  
-                                        const SizedBox(height: 4,),
-                                  
-                                        Text(
-                                          "(${tvShow.first_air_date!.substring(0, 4)})",
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 20
-                                          ),
-                                        )
+
+                                        tvShow.first_air_date!.isNotEmpty
+                                        ? Column(
+                                          children: [
+                                            const SizedBox(height: 4,),
+                                      
+                                            Text(
+                                              "(${tvShow.first_air_date!.substring(0, 4)})",
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 20
+                                              ),
+                                            )
+                                          ],
+                                        ) : Container()
                                       ],
                                     ),
                                   )
@@ -143,12 +149,13 @@ class TvShowScreen extends StatelessWidget {
                                 spacing: 16,
                                 runSpacing: 16,
                                 children: [
-                                  Text(
+                                  tvShow.first_air_date!.isNotEmpty
+                                  ? Text(
                                     mediaFunctions.formatDate(tvShow.first_air_date!)["date"],
                                     style: const TextStyle(
                                       color: Colors.white
                                     ),
-                                  ),
+                                  ) : Container(),
 
                                   Wrap(
                                     children: mediaFunctions.formatGenres(tvShow.genres).split('').map((genre) {
@@ -207,7 +214,7 @@ class TvShowScreen extends StatelessWidget {
 
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: crew.getRange(0,5).map((e) {
+                                children: crew.getRange(0, crew.length >= 5 ? 5 : crew.length).map((e) {
                                   String jobs = '';
                                   e.jobs!.forEach((element) {
                                     if(e.jobs!.indexOf(element) == e.jobs!.length - 1) {
@@ -240,7 +247,8 @@ class TvShowScreen extends StatelessWidget {
                     ),
 
                     // Main Cast
-                    Container(
+                    cast.isNotEmpty
+                    ? Container(
                       padding: const EdgeInsets.all(8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,13 +281,7 @@ class TvShowScreen extends StatelessWidget {
                                           )
                                         )
                                       ),
-                                    ) : Container(
-                                        width: posterHeight / 1.5,
-                                        height: posterHeight,
-                                        child: Center(
-                                          child: Icon(Icons.person, color: Colors.grey[700], size: 102,),
-                                       ),
-                                    ),
+                                    ) : NoCastProfilePath(posterHeight: posterHeight),
                               
                                     Container(
                                       padding: const EdgeInsets.all(2),
@@ -317,7 +319,7 @@ class TvShowScreen extends StatelessWidget {
                           )
                         ],
                       ),
-                    ),
+                    ) : Container(),
 
                     recommendations.isNotEmpty ? const SizedBox(height: 20,) : Container(),
 

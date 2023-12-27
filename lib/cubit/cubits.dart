@@ -13,19 +13,13 @@ class AppCubit extends Cubit<CubitStates> {
     goToMoviesPage();
   }
 
-
   MediaServices media;
-  List<Movie>? topRatedMovies;
-  List<Movie>? trendingMovies;
-  List<Movie>? upcomingMovies;
 
-
-  List<TvShow>? trendingTvShows;
-  List<TvShow>? topRatedTvShows;
+  MoviesState finalMoviesState = MoviesState(topRatedMovies: [], trendingMovies: [], upcomingMovies: [], hasData: false);
 
   goToMoviesPage() {
-    if(topRatedMovies != null) {
-      emit(MoviesState(topRatedMovies: topRatedMovies!, trendingMovies: trendingMovies!, upcomingMovies: upcomingMovies!)); 
+    if(finalMoviesState.hasData) {
+      emit(finalMoviesState); 
       return;
     }
   
@@ -36,19 +30,22 @@ class AppCubit extends Cubit<CubitStates> {
       media.getTrendingMovies(),
       media.getUpcomingMovies()
     ]).then((value) {
-      topRatedMovies = value[0];
-      trendingMovies = value[1];
-      upcomingMovies = value[2];
+      finalMoviesState.topRatedMovies = value[0];
+      finalMoviesState.trendingMovies = value[1];
+      finalMoviesState.upcomingMovies = value[2];
+      finalMoviesState.hasData = true;
       
-      emit(MoviesState(topRatedMovies: topRatedMovies!, trendingMovies: trendingMovies!, upcomingMovies: upcomingMovies!)); 
+      emit(finalMoviesState); 
     });
   }
+
+  TvShowsState finalTvShowsState = TvShowsState(trendingTvShows: [], topRatedTvShows: [], hasData: false);
 
   goToTvSeriesPage() {
     emit(LoadingState());
 
-    if(trendingTvShows != null && topRatedTvShows != null) {
-      emit(TvShowsState(trendingTvShows: trendingTvShows!, topRatedTvShows: topRatedTvShows!));
+    if(finalTvShowsState.hasData) {
+      emit(finalTvShowsState);
       return;
     }
 
@@ -56,22 +53,17 @@ class AppCubit extends Cubit<CubitStates> {
       media.getTrendingTvShows(),
       media.getTopRatedTvShows()
     ]).then((value) {
-      trendingTvShows = value[0];
-      topRatedTvShows = value[1];
+      finalTvShowsState.trendingTvShows = value[0];
+      finalTvShowsState.topRatedTvShows = value[1];
+      finalTvShowsState.hasData = true;
 
-      emit(TvShowsState(trendingTvShows: trendingTvShows!, topRatedTvShows: topRatedTvShows!));
+      emit(finalTvShowsState);
     });
   }
 
+  List<MovieState> moviesInCache = [];
+
   showMoviePage(int movieId) async {
-    late String currentState;
-
-    if(this.state is MoviesState) {
-      currentState = "MoviesState";
-    } else if (this.state is MovieState) {
-      currentState = "MovieState";
-    }
-
     emit(LoadingState());
 
     List movieData = await Future.wait([
@@ -90,13 +82,25 @@ class AppCubit extends Cubit<CubitStates> {
     List<Keyword> keywords = movieData[2] as List<Keyword>;
     List<Movie> recommendations = movieData[3] as List<Movie>;
 
-    if(currentState == "MoviesState") {
-      emit(MovieState(movieId: movieId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations));
-    } else if (currentState == "MovieState") {
-      MovieState recommendationMovie = MovieState(movieId: movieId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations);
-      emit(recommendationMovie);
+    MovieState movieState = MovieState(movieId: movieId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations);
+
+    moviesInCache.add(movieState);
+
+    emit(movieState);
+  }
+
+  backToPreviousMovie() {
+    moviesInCache.removeLast();
+
+    if(moviesInCache.isEmpty) {
+      goToMoviesPage();
+      return;
+    } else {
+      emit(moviesInCache.last);
     }
   }
+
+  List<TvShowState> tvShowsInCache = [];
 
   showTvShowPage(int tvShowId) async {
     late String currentState;
@@ -125,15 +129,58 @@ class AppCubit extends Cubit<CubitStates> {
     List<Keyword> keywords = tvShowData[2] as List<Keyword>;
     List<TvShow> recommendations = tvShowData[3] as List<TvShow>;
 
-    if(currentState == "TvShowsState") {
-      emit(TvShowState(tvShowId: tvShowId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations));
-    } else if (currentState == "TvShowState") {
-      TvShowState recommendationTvShow = TvShowState(tvShowId: tvShowId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations);
-      emit(recommendationTvShow);
+    TvShowState tvShowState = TvShowState(tvShowId: tvShowId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations);
+
+    tvShowsInCache.add(tvShowState);
+
+    emit(tvShowState);
+  }
+
+  backToPreviousTvShow() {
+    tvShowsInCache.removeLast();
+
+    if(tvShowsInCache.isEmpty) {
+      goToTvSeriesPage();
+      return;
+    } else {
+      emit(tvShowsInCache.last);
     }
   }
 
+  SearchPageState finalSearchPageState = SearchPageState(query: "", movies: [], tvShows: [], mediaType: "movie", hasData: false);
+
   goToSearchPage() {
-    emit(SearchPageState());
+    emit(SearchPageState(query: finalSearchPageState.query, movies: finalSearchPageState.movies, tvShows: finalSearchPageState.tvShows, mediaType: finalSearchPageState.mediaType, hasData: finalSearchPageState.hasData));
   }
+
+
+  searchQuery(String mediaType, String query) async {
+    // verify if the user has already searched the same query with the same media type (movie or tv show) and return the same result (does nothing)
+    if(query == finalSearchPageState.query) {
+      if(mediaType == "movie" && finalSearchPageState.movies.isNotEmpty) {
+        return;
+      } else if(mediaType == "tv" && finalSearchPageState.tvShows.isNotEmpty) {
+        return;
+      }
+    }
+    
+    List result = await media.search(mediaType, query);
+
+    print("Again");
+
+    finalSearchPageState.query = query;
+    finalSearchPageState.hasData = true;
+
+    if(mediaType == "movie") {
+      List<Movie> movies = result as List<Movie>;
+      finalSearchPageState.movies = movies;
+      finalSearchPageState.tvShows = [];
+    } else if(mediaType == "tv") {
+      List<TvShow> tvShows = result as List<TvShow>;
+      finalSearchPageState.tvShows = tvShows;
+      finalSearchPageState.movies = [];
+    }
+
+    emit(SearchPageState(query: finalSearchPageState.query, movies: finalSearchPageState.movies, tvShows: finalSearchPageState.tvShows, mediaType: finalSearchPageState.mediaType, hasData: finalSearchPageState.hasData));
+  } 
 }

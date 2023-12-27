@@ -14,21 +14,23 @@ class InitialState extends CubitStates {
 }
 
 class MoviesState extends CubitStates {
-  MoviesState({ required this.trendingMovies, required this.topRatedMovies, required this.upcomingMovies });
+  MoviesState({ required this.trendingMovies, required this.topRatedMovies, required this.upcomingMovies, required this.hasData });
 
   List<Movie> trendingMovies;
   List<Movie> topRatedMovies;
   List<Movie> upcomingMovies;
+  bool hasData;
 
   @override
   List<Object> get props => [];
 }
 
 class TvShowsState extends CubitStates {
-  TvShowsState({ required this.trendingTvShows, required this.topRatedTvShows });
+  TvShowsState({ required this.trendingTvShows, required this.topRatedTvShows, required this.hasData });
   
   List<TvShow> trendingTvShows;
   List<TvShow> topRatedTvShows;
+  bool hasData;
 
   @override
   List<Object> get props => [];
@@ -68,6 +70,14 @@ class LoadingState extends CubitStates {
 }
 
 class SearchPageState extends CubitStates {
+  SearchPageState({ required this.query, required this.movies, required this.tvShows, required this.mediaType, required this.hasData });
+
+  String query;
+  List<Movie> movies;
+  List<TvShow> tvShows;
+  String mediaType;
+  bool hasData;
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [query, movies, tvShows, mediaType, hasData];
 }

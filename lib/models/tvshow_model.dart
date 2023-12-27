@@ -27,7 +27,7 @@ class TvShow {
 
 class TvShowDetails extends TvShow {
   TvShowDetails({ required this.tvShow }) : super(tvShow: tvShow){
-    print('episode_run_time: $tvShow');
+
     episode_run_time = tvShow["episode_run_time"];
     tagline = tvShow["tagline"];
     List a = tvShow["genres"];

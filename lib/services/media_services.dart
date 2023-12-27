@@ -284,7 +284,7 @@ Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
       List<TvShow> movieRecommendations = movies.map((e) => TvShow(tvShow: e)).toList();
 
       return movieRecommendations;
-  } else {
+    } else {
       throw Exception('Failed to load data');
     }
   }
@@ -357,4 +357,27 @@ Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
       throw Exception('Failed to load data');
     }
   } 
+
+  Future<List> search(String mediaType, String query) async {
+
+    final url = Uri.parse("https://api.themoviedb.org/3/search/$mediaType?api_key=$apiKey&language=en-US&query=$query&include_adult=false");
+    final res = await http.get(url);
+
+    if (res.statusCode == 200) {
+      final data = json.decode(res.body);
+
+      List searchResults = data["results"];
+
+      if(mediaType == "movie") {
+        List<Movie> movies = searchResults.map((e) => Movie(media: e)).toList();
+        return movies;
+      } else {
+        List<TvShow> tvShows = searchResults.map((e) => TvShow(tvShow: e)).toList();
+        return tvShows;
+      }
+
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
 import 'package:mediafy/models/media_functions_model.dart';
@@ -60,7 +61,8 @@ class MoviesPage extends StatelessWidget {
                                   BlocProvider.of<AppCubit>(context).showMoviePage(trendingMovie.id!);
                                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                 },
-                                child: Container(
+                                child: trendingMovie.poster_path != null
+                                ? Container(
                                   margin: const EdgeInsets.only(right: 8),
                                   width: posterHeight / 1.5,
                                   height: posterHeight,
@@ -71,7 +73,7 @@ class MoviesPage extends StatelessWidget {
                                       )
                                     )
                                   ),
-                                ),
+                                ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
                               ),
 
                               Container(
@@ -133,7 +135,8 @@ class MoviesPage extends StatelessWidget {
                                   BlocProvider.of<AppCubit>(context).showMoviePage(topRatedMovie.id!);
                                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                 },
-                                child: Container(
+                                child: topRatedMovie.poster_path != null
+                                ? Container(
                                   margin: const EdgeInsets.only(right: 8),
                                   width: posterHeight / 1.5,
                                   height: posterHeight,
@@ -144,7 +147,7 @@ class MoviesPage extends StatelessWidget {
                                       )
                                     )
                                   ),
-                                ),
+                                ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
                               ),
 
                               Container(
@@ -206,7 +209,8 @@ class MoviesPage extends StatelessWidget {
                                   BlocProvider.of<AppCubit>(context).showMoviePage(upcomingMovie.id!);
                                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                 },
-                                child: Container(
+                                child: upcomingMovie.poster_path != null
+                                ? Container(
                                   margin: const EdgeInsets.only(right: 8),
                                   width: posterHeight / 1.5,
                                   height: posterHeight,
@@ -217,7 +221,7 @@ class MoviesPage extends StatelessWidget {
                                       )
                                     )
                                   ),
-                                ),
+                                ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
                               ),
 
                               Container(

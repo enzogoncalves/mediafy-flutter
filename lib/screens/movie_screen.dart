@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mediafy/components/mediaDetails.dart';
+import 'package:mediafy/components/noCastProfilePath.dart';
 import 'package:mediafy/components/title_large.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
@@ -37,7 +38,7 @@ class MovieScreen extends StatelessWidget {
                 actions: [
                   IconButton(
                     onPressed: () {
-                      BlocProvider.of<AppCubit>(context).goToMoviesPage();            
+                      BlocProvider.of<AppCubit>(context).backToPreviousMovie();            
                     }, 
                     icon: Icon(Icons.arrow_back)
                   )
@@ -277,13 +278,7 @@ class MovieScreen extends StatelessWidget {
                                           )
                                         )
                                       ),
-                                    ) : Container(
-                                        width: posterHeight / 1.5,
-                                        height: posterHeight,
-                                        child: Center(
-                                          child: Icon(Icons.person, color: Colors.grey[700], size: 102,),
-                                       ),
-                                    ),
+                                    ) : NoCastProfilePath(posterHeight: posterHeight),
                               
                                     Container(
                                       padding: const EdgeInsets.all(2),
