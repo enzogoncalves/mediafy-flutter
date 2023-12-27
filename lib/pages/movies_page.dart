@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:mediafy/components/LoadingMedia.dart';
 import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
@@ -19,248 +20,252 @@ class MoviesPage extends StatelessWidget {
           List<Movie> topRatedMovies = state.topRatedMovies;
           List<Movie> upcomingMovies = state.upcomingMovies;
           MediaFunctions mediaFunctions = MediaFunctions();
+          bool hasData = state.hasData;
 
-          return Container(
-            margin: const EdgeInsets.only(left: 10, top: 10),
-            child: ListView(
-              children: [
-                // Trending Movies
-                Column(
-                  children: [
-                    const Row(
-                      children: [
-                        Text(
-                          "Trending Movies",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white
+          if(hasData) {
+            return Container(
+              margin: const EdgeInsets.only(left: 10, top: 10),
+              child: ListView(
+                children: [
+                  // Trending Movies
+                  Column(
+                    children: [
+                      const Row(
+                        children: [
+                          Text(
+                            "Trending Movies",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white
+                            ),
                           ),
-                        ),
 
-                        SizedBox(width: 5,),
+                          SizedBox(width: 5,),
 
-                        Icon(Icons.local_fire_department_outlined, color: Colors.orange,)
-                      ],
-                    ),
-
-                    const SizedBox(height: 8,),
-
-                    SizedBox(
-                      height: 220,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: trendingMovies.length,
-                        itemBuilder: (context, index) {
-                          Movie trendingMovie = trendingMovies[index];
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: (){
-                                  BlocProvider.of<AppCubit>(context).showMoviePage(trendingMovie.id!);
-                                  // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
-                                },
-                                child: trendingMovie.poster_path != null
-                                ? Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: posterHeight / 1.5,
-                                  height: posterHeight,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        "https://image.tmdb.org/t/p/w300${trendingMovie.poster_path}"
-                                      )
-                                    )
-                                  ),
-                                ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
-                              ),
-
-                              Container(
-                                padding: const EdgeInsets.all(2),
-                                width: posterHeight / 1.5,
-                                child: Text(
-                                  trendingMovie.original_title!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    overflow: TextOverflow.ellipsis
-                                  ),
-                                ),
-                              )
-                            ],
-                          );
-                        },
+                          Icon(Icons.local_fire_department_outlined, color: Colors.orange,)
+                        ],
                       ),
-                    ),
-                  ],
-                ),
 
-                const SizedBox(height: 20,),
+                      const SizedBox(height: 8,),
 
-                // Top Rated Movies
-                Column(
-                  children: [
-                    const Row(
-                      children: [
-                        Text(
-                          "Top Rated Movies",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white
-                          ),
-                        ),
+                      SizedBox(
+                        height: 220,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: trendingMovies.length,
+                          itemBuilder: (context, index) {
+                            Movie trendingMovie = trendingMovies[index];
 
-                        SizedBox(width: 5,),
-
-                        Icon(Icons.star, color: Colors.orange,)
-                      ],
-                    ),
-
-                    const SizedBox(height: 8,),
-
-                    SizedBox(
-                      height: 220,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: topRatedMovies.length,
-                        itemBuilder: (context, index) {
-                          Movie topRatedMovie = topRatedMovies[index];
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: (){
-                                  BlocProvider.of<AppCubit>(context).showMoviePage(topRatedMovie.id!);
-                                  // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
-                                },
-                                child: topRatedMovie.poster_path != null
-                                ? Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: posterHeight / 1.5,
-                                  height: posterHeight,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        "https://image.tmdb.org/t/p/w300${topRatedMovie.poster_path}"
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: (){
+                                    BlocProvider.of<AppCubit>(context).showMoviePage(trendingMovie.id!);
+                                    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
+                                  },
+                                  child: trendingMovie.poster_path != null
+                                  ? Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    width: posterHeight / 1.5,
+                                    height: posterHeight,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          "https://image.tmdb.org/t/p/w300${trendingMovie.poster_path}"
+                                        )
                                       )
-                                    )
-                                  ),
-                                ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
-                              ),
-
-                              Container(
-                                padding: const EdgeInsets.all(2),
-                                width: posterHeight / 1.5,
-                                child: Text(
-                                  topRatedMovie.original_title!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    overflow: TextOverflow.ellipsis
-                                  ),
-                                ),
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20,),
-                
-                // Upcoming Movies
-                Column(
-                  children: [
-                    const Row(
-                      children: [
-                        Text(
-                          "Upcoming Movies",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white
-                          ),
-                        ),
-
-                        SizedBox(width: 5,),
-
-                        Icon(Icons.access_time, color: Colors.orange,)
-                      ],
-                    ),
-
-                    const SizedBox(height: 8,),
-
-                    SizedBox(
-                      height: 250,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: upcomingMovies.length,
-                        itemBuilder: (context, index) {
-                          Movie upcomingMovie = upcomingMovies[index];
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: (){
-                                  BlocProvider.of<AppCubit>(context).showMoviePage(upcomingMovie.id!);
-                                  // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
-                                },
-                                child: upcomingMovie.poster_path != null
-                                ? Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: posterHeight / 1.5,
-                                  height: posterHeight,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        "https://image.tmdb.org/t/p/w300${upcomingMovie.poster_path}"
-                                      )
-                                    )
-                                  ),
-                                ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
-                              ),
-
-                              Container(
-                                padding: const EdgeInsets.all(2),
-                                width: posterHeight / 1.5,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      upcomingMovie.original_title!,
-                                      
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        overflow: TextOverflow.ellipsis
-                                      ),
                                     ),
-
-                                    Text(
-                                      mediaFunctions.transformReleaseDate(upcomingMovie.release_date!),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12
-                                      ),
-                                    ),
-                                  ],
+                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
                                 ),
-                              )
-                            ],
-                          );
-                        },
+
+                                Container(
+                                  padding: const EdgeInsets.all(2),
+                                  width: posterHeight / 1.5,
+                                  child: Text(
+                                    trendingMovie.original_title!,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      overflow: TextOverflow.ellipsis
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                
-              ],
-            ),
-          );
+                    ],
+                  ),
+
+                  const SizedBox(height: 20,),
+
+                  // Top Rated Movies
+                  Column(
+                    children: [
+                      const Row(
+                        children: [
+                          Text(
+                            "Top Rated Movies",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white
+                            ),
+                          ),
+
+                          SizedBox(width: 5,),
+
+                          Icon(Icons.star, color: Colors.orange,)
+                        ],
+                      ),
+
+                      const SizedBox(height: 8,),
+
+                      SizedBox(
+                        height: 220,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: topRatedMovies.length,
+                          itemBuilder: (context, index) {
+                            Movie topRatedMovie = topRatedMovies[index];
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: (){
+                                    BlocProvider.of<AppCubit>(context).showMoviePage(topRatedMovie.id!);
+                                    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
+                                  },
+                                  child: topRatedMovie.poster_path != null
+                                  ? Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    width: posterHeight / 1.5,
+                                    height: posterHeight,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          "https://image.tmdb.org/t/p/w300${topRatedMovie.poster_path}"
+                                        )
+                                      )
+                                    ),
+                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
+                                ),
+
+                                Container(
+                                  padding: const EdgeInsets.all(2),
+                                  width: posterHeight / 1.5,
+                                  child: Text(
+                                    topRatedMovie.original_title!,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      overflow: TextOverflow.ellipsis
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20,),
+                  
+                  // Upcoming Movies
+                  Column(
+                    children: [
+                      const Row(
+                        children: [
+                          Text(
+                            "Upcoming Movies",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white
+                            ),
+                          ),
+
+                          SizedBox(width: 5,),
+
+                          Icon(Icons.access_time, color: Colors.orange,)
+                        ],
+                      ),
+
+                      const SizedBox(height: 8,),
+
+                      SizedBox(
+                        height: 250,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: upcomingMovies.length,
+                          itemBuilder: (context, index) {
+                            Movie upcomingMovie = upcomingMovies[index];
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: (){
+                                    BlocProvider.of<AppCubit>(context).showMoviePage(upcomingMovie.id!);
+                                    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
+                                  },
+                                  child: upcomingMovie.poster_path != null
+                                  ? Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    width: posterHeight / 1.5,
+                                    height: posterHeight,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          "https://image.tmdb.org/t/p/w300${upcomingMovie.poster_path}"
+                                        )
+                                      )
+                                    ),
+                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
+                                ),
+
+                                Container(
+                                  padding: const EdgeInsets.all(2),
+                                  width: posterHeight / 1.5,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        upcomingMovie.original_title!,
+                                        
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          overflow: TextOverflow.ellipsis
+                                        ),
+                                      ),
+
+                                      Text(
+                                        mediaFunctions.transformReleaseDate(upcomingMovie.release_date!),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const LoadingMedias(itemCount: 3);
+          }
         } else {
           return Container();
         }

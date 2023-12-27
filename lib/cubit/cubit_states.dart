@@ -22,6 +22,11 @@ class MoviesState extends CubitStates {
   bool hasData;
 
   @override
+  List<Object> get props => [trendingMovies, topRatedMovies, upcomingMovies, hasData];
+}
+
+class LoadingMovies extends CubitStates {
+  @override
   List<Object> get props => [];
 }
 
@@ -33,7 +38,7 @@ class TvShowsState extends CubitStates {
   bool hasData;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [trendingTvShows, topRatedTvShows, hasData];
 }
 
 class MovieState extends CubitStates {

@@ -22,42 +22,46 @@ class AppCubit extends Cubit<CubitStates> {
       emit(finalMoviesState); 
       return;
     }
-  
-    emit(LoadingState());
+
+    emit(finalMoviesState);
     
     Future.wait([
       media.getTopRatedMovies(),
       media.getTrendingMovies(),
       media.getUpcomingMovies()
     ]).then((value) {
+      MoviesState movieState = MoviesState(topRatedMovies: value[0], trendingMovies: value[1], upcomingMovies: value[2], hasData: true);
+      
+      emit(movieState);
+
       finalMoviesState.topRatedMovies = value[0];
       finalMoviesState.trendingMovies = value[1];
       finalMoviesState.upcomingMovies = value[2];
       finalMoviesState.hasData = true;
-      
-      emit(finalMoviesState); 
     });
   }
 
   TvShowsState finalTvShowsState = TvShowsState(trendingTvShows: [], topRatedTvShows: [], hasData: false);
 
   goToTvSeriesPage() {
-    emit(LoadingState());
-
     if(finalTvShowsState.hasData) {
       emit(finalTvShowsState);
       return;
     }
 
+    emit(finalTvShowsState);
+
     Future.wait([
       media.getTrendingTvShows(),
       media.getTopRatedTvShows()
     ]).then((value) {
+      TvShowsState tvShowsState = TvShowsState(trendingTvShows: value[0], topRatedTvShows: value[1], hasData: true);
+
+      emit(tvShowsState);
+
       finalTvShowsState.trendingTvShows = value[0];
       finalTvShowsState.topRatedTvShows = value[1];
       finalTvShowsState.hasData = true;
-
-      emit(finalTvShowsState);
     });
   }
 
@@ -103,14 +107,6 @@ class AppCubit extends Cubit<CubitStates> {
   List<TvShowState> tvShowsInCache = [];
 
   showTvShowPage(int tvShowId) async {
-    late String currentState;
-
-    if(this.state is TvShowsState) {
-      currentState = "TvShowsState";
-    } else if (this.state is TvShowState) {
-      currentState = "TvShowState";
-    }
-
     emit(LoadingState());
 
     List tvShowData = await Future.wait([
