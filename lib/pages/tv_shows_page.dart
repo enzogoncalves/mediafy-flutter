@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:mediafy/components/LoadingMedia.dart';
+import 'package:mediafy/components/LoadingMoviesTvShows.dart';
 import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
@@ -174,7 +174,7 @@ class TvShowsPage extends StatelessWidget {
               ),
             );
           } else {  
-            return const LoadingMedias(itemCount: 2);
+            return const LoadingMoviesTvShows(itemCount: 2);
           }
 
         } else {

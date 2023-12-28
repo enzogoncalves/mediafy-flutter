@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:mediafy/components/LoadingMedia.dart';
 import 'package:mediafy/components/mediaDetails.dart';
 import 'package:mediafy/components/noCastProfilePath.dart';
 import 'package:mediafy/components/title_large.dart';
@@ -19,7 +20,6 @@ class MovieScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // List cast;
     return SafeArea(
       child: BlocBuilder<AppCubit, CubitStates>(
         builder: (context, state) {
@@ -440,6 +440,8 @@ class MovieScreen extends StatelessWidget {
                 ),
               )
             );
+          } else if (state is LoadingMovie) {
+            return const LoadingMedia();
           } else {
             return const Center(child: Text("Erro na tela do filme"),);
           }

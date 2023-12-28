@@ -68,8 +68,8 @@ class AppCubit extends Cubit<CubitStates> {
   List<MovieState> moviesInCache = [];
 
   showMoviePage(int movieId) async {
-    emit(LoadingState());
-
+    emit(LoadingMovie());
+    
     List movieData = await Future.wait([
       media.getMovieDetails(movieId), 
       media.getMovieCredits(movieId), 
@@ -86,7 +86,7 @@ class AppCubit extends Cubit<CubitStates> {
     List<Keyword> keywords = movieData[2] as List<Keyword>;
     List<Movie> recommendations = movieData[3] as List<Movie>;
 
-    MovieState movieState = MovieState(movieId: movieId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations);
+    MovieState movieState = MovieState(movieId: movieId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations, hasData: false);
 
     moviesInCache.add(movieState);
 
@@ -107,7 +107,7 @@ class AppCubit extends Cubit<CubitStates> {
   List<TvShowState> tvShowsInCache = [];
 
   showTvShowPage(int tvShowId) async {
-    emit(LoadingState());
+    emit(LoadingTvShow());
 
     List tvShowData = await Future.wait([
       media.getTvShowDetails(tvShowId), 

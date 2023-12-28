@@ -29,7 +29,11 @@ class _CubitLogicsState extends State<CubitLogics> {
             return const Center(child: CircularProgressIndicator(),);
           } else if (state is MovieState) {
             return const MovieScreen();
+          } else if (state is LoadingMovie) {
+            return const MovieScreen();
           } else if (state is TvShowState) {
+            return const TvShowScreen();
+          } else if (state is LoadingTvShow) {
             return const TvShowScreen();
           }else {
             return const Placeholder();

@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:mediafy/components/LoadingMedia.dart';
 import 'package:mediafy/components/mediaDetails.dart';
 import 'package:mediafy/components/noCastProfilePath.dart';
 import 'package:mediafy/components/title_large.dart';
@@ -443,6 +444,8 @@ class TvShowScreen extends StatelessWidget {
                 ),
               )
             );
+          } else if(state is LoadingTvShow) {
+            return const LoadingMedia();
           } else {
             return const Center(child: Text("Erro na tela do filme"),);
           }

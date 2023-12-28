@@ -25,11 +25,6 @@ class MoviesState extends CubitStates {
   List<Object> get props => [trendingMovies, topRatedMovies, upcomingMovies, hasData];
 }
 
-class LoadingMovies extends CubitStates {
-  @override
-  List<Object> get props => [];
-}
-
 class TvShowsState extends CubitStates {
   TvShowsState({ required this.trendingTvShows, required this.topRatedTvShows, required this.hasData });
   
@@ -42,7 +37,7 @@ class TvShowsState extends CubitStates {
 }
 
 class MovieState extends CubitStates {
-  MovieState({ required this.movieId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations });
+  MovieState({ required this.movieId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations, required this.hasData });
 
   int movieId;
   MovieDetails details;
@@ -50,9 +45,15 @@ class MovieState extends CubitStates {
   List<Crew> crew;
   List<Keyword> keywords;
   List<Movie> recommendations;
+  bool hasData;
 
   @override
-  List<Object> get props => [movieId];
+  List<Object> get props => [hasData, movieId, details, cast, crew, keywords, recommendations];
+}
+
+class LoadingMovie extends CubitStates {
+  @override
+  List<Object> get props => [];
 }
 
 class TvShowState extends CubitStates {
@@ -67,6 +68,11 @@ class TvShowState extends CubitStates {
 
   @override
   List<Object> get props => [tvShowId];
+}
+
+class LoadingTvShow extends CubitStates {
+  @override
+  List<Object> get props => [];
 }
 
 class LoadingState extends CubitStates {
