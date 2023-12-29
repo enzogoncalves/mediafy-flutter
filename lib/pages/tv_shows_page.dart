@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mediafy/components/LoadingMoviesTvShows.dart';
+import 'package:mediafy/components/Poster.dart';
 import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
@@ -61,19 +62,7 @@ class TvShowsPage extends StatelessWidget {
                                     BlocProvider.of<AppCubit>(context).showTvShowPage(trendingTvShow.id!);
                                     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                   },
-                                  child: trendingTvShow.poster_path != null
-                                  ? Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    width: posterHeight / 1.5,
-                                    height: posterHeight,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          "https://image.tmdb.org/t/p/w300${trendingTvShow.poster_path}"
-                                        )
-                                      )
-                                    ),
-                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: false)
+                                  child: Poster(height: posterHeight, posterPath: trendingTvShow.poster_path)
                                 ),
 
                                 Container(
@@ -135,19 +124,7 @@ class TvShowsPage extends StatelessWidget {
                                     BlocProvider.of<AppCubit>(context).showTvShowPage(topRatedTvShow.id!);
                                     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                   },
-                                  child: topRatedTvShow.poster_path != null
-                                    ? Container(
-                                      margin: const EdgeInsets.only(right: 8),
-                                      width: posterHeight / 1.5,
-                                      height: posterHeight,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            "https://image.tmdb.org/t/p/w300${topRatedTvShow.poster_path}"
-                                          )
-                                        )
-                                      ),
-                                    ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: false)
+                                  child: Poster(height: posterHeight, posterPath: topRatedTvShow.poster_path)
                                 ),
 
                                 Container(

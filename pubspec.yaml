@@ -69,6 +69,7 @@ flutter:
     - .env
     - assets/search.svg
     - assets/not-found.svg
+    - assets/loader.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

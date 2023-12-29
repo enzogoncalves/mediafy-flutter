@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mediafy/components/LoadingMedia.dart';
+import 'package:mediafy/components/Poster.dart';
 import 'package:mediafy/components/mediaDetails.dart';
 import 'package:mediafy/components/noCastProfilePath.dart';
 import 'package:mediafy/components/title_large.dart';
@@ -90,19 +91,8 @@ class MovieScreen extends StatelessWidget {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Container(
-                                    width: 128,
-                                    height: 192,
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          "https://image.tmdb.org/t/p/original${movie.poster_path}"
-                                        )
-                                      )
-                                    ),
-                                  ),
-
+                                  Poster(posterPath: movie.poster_path, height: 192, width: 128),
+                                  
                                   const SizedBox(width: 10,),
 
                                   Expanded(
@@ -347,18 +337,7 @@ class MovieScreen extends StatelessWidget {
                                      context.read<AppCubit>().showMoviePage(movieRecommendation.id!);
                                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                     },
-                                    child: Container(
-                                      margin: const EdgeInsets.only(right: 8),
-                                      width: posterHeight / 1.5,
-                                      height: posterHeight,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            "https://image.tmdb.org/t/p/w300${movieRecommendation.poster_path}"
-                                          )
-                                        )
-                                      ),
-                                    ),
+                                    child: Poster(height: posterHeight, posterPath: movieRecommendation.poster_path)
                                   ),
 
                                   Container(

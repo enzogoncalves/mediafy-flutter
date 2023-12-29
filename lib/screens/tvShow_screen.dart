@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mediafy/components/LoadingMedia.dart';
+import 'package:mediafy/components/Poster.dart';
 import 'package:mediafy/components/mediaDetails.dart';
 import 'package:mediafy/components/noCastProfilePath.dart';
 import 'package:mediafy/components/title_large.dart';
@@ -91,18 +92,7 @@ class TvShowScreen extends StatelessWidget {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Container(
-                                    width: 128,
-                                    height: 192,
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          "https://image.tmdb.org/t/p/original${tvShow.poster_path}"
-                                        )
-                                      )
-                                    ),
-                                  ),
+                                  Poster(posterPath: tvShow.poster_path, height: 192, width: 128),
 
                                   const SizedBox(width: 10,),
 
@@ -347,18 +337,7 @@ class TvShowScreen extends StatelessWidget {
                                      context.read<AppCubit>().showTvShowPage(tvShowRecommendations.id!);
                                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                     },
-                                    child: Container(
-                                      margin: const EdgeInsets.only(right: 8),
-                                      width: posterHeight / 1.5,
-                                      height: posterHeight,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            "https://image.tmdb.org/t/p/w300${tvShowRecommendations.poster_path}"
-                                          )
-                                        )
-                                      ),
-                                    ),
+                                    child: Poster(height: posterHeight, posterPath: tvShowRecommendations.poster_path)
                                   ),
 
                                   Container(

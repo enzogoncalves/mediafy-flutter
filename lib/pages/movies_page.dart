@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mediafy/components/LoadingMoviesTvShows.dart';
+import 'package:mediafy/components/Poster.dart';
 import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
@@ -64,19 +65,7 @@ class MoviesPage extends StatelessWidget {
                                     BlocProvider.of<AppCubit>(context).showMoviePage(trendingMovie.id!);
                                     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                   },
-                                  child: trendingMovie.poster_path != null
-                                  ? Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    width: posterHeight / 1.5,
-                                    height: posterHeight,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          "https://image.tmdb.org/t/p/w300${trendingMovie.poster_path}"
-                                        )
-                                      )
-                                    ),
-                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
+                                  child: Poster(height: posterHeight, posterPath: trendingMovie.poster_path)
                                 ),
 
                                 Container(
@@ -138,19 +127,7 @@ class MoviesPage extends StatelessWidget {
                                     BlocProvider.of<AppCubit>(context).showMoviePage(topRatedMovie.id!);
                                     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                   },
-                                  child: topRatedMovie.poster_path != null
-                                  ? Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    width: posterHeight / 1.5,
-                                    height: posterHeight,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          "https://image.tmdb.org/t/p/w300${topRatedMovie.poster_path}"
-                                        )
-                                      )
-                                    ),
-                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
+                                  child: Poster(height: posterHeight, posterPath: topRatedMovie.poster_path)
                                 ),
 
                                 Container(
@@ -212,19 +189,7 @@ class MoviesPage extends StatelessWidget {
                                     BlocProvider.of<AppCubit>(context).showMoviePage(upcomingMovie.id!);
                                     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                   },
-                                  child: upcomingMovie.poster_path != null
-                                  ? Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    width: posterHeight / 1.5,
-                                    height: posterHeight,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          "https://image.tmdb.org/t/p/w300${upcomingMovie.poster_path}"
-                                        )
-                                      )
-                                    ),
-                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
+                                  child: Poster(height: posterHeight, posterPath: upcomingMovie.poster_path)
                                 ),
 
                                 Container(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mediafy/components/Poster.dart';
 import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
@@ -131,19 +132,7 @@ class _SearchPageState extends State<SearchPage> {
                                     BlocProvider.of<AppCubit>(context).showMoviePage(movie.id!);
                                     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                   },
-                                  child: movie.poster_path != null
-                                  ? Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    width: posterHeight / 1.5,
-                                    height: posterHeight,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          "https://image.tmdb.org/t/p/w300${movie.poster_path}"
-                                        )
-                                      )
-                                    ),
-                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: true)
+                                  child: Poster(height: posterHeight, posterPath: movie.poster_path)
                                 ),
                     
                                 Container(
@@ -180,19 +169,7 @@ class _SearchPageState extends State<SearchPage> {
                                         BlocProvider.of<AppCubit>(context).showTvShowPage(tvShow.id!);
                                         // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
                                       },
-                                      child: tvShow.poster_path != null
-                                      ? Container(
-                                        margin: const EdgeInsets.only(right: 8),
-                                        width: posterHeight / 1.5,
-                                        height: posterHeight,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              "https://image.tmdb.org/t/p/w300${tvShow.poster_path}"
-                                            )
-                                          )
-                                        ),
-                                      ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: false)
+                                      child: Poster(height: posterHeight, posterPath: tvShow.poster_path)
                                     ),
 
                                     Container(
