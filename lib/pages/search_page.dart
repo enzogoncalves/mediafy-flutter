@@ -164,76 +164,57 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                     ),
                   )
-                  : Expanded(
-                    child: SingleChildScrollView(
-                      child: Wrap(
-                          spacing: 16,
-                          runSpacing: 16,
-                          children: tvShows.map((TvShow tvShow) {
-                            double posterHeight = 180;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                  onTap: (){
-                                    BlocProvider.of<AppCubit>(context).showTvShowPage(tvShow.id!);
-                                    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
-                                  },
-                                  child: tvShow.poster_path != null
-                                  ? Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    width: posterHeight / 1.5,
-                                    height: posterHeight,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          "https://image.tmdb.org/t/p/w300${tvShow.poster_path}"
-                                        )
-                                      )
+                  : tvShows.isNotEmpty 
+                    ? Expanded(
+                        child: SingleChildScrollView(
+                          child: Wrap(
+                              spacing: 16,
+                              runSpacing: 16,
+                              children: tvShows.map((TvShow tvShow) {
+                                double posterHeight = 180;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: (){
+                                        BlocProvider.of<AppCubit>(context).showTvShowPage(tvShow.id!);
+                                        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
+                                      },
+                                      child: tvShow.poster_path != null
+                                      ? Container(
+                                        margin: const EdgeInsets.only(right: 8),
+                                        width: posterHeight / 1.5,
+                                        height: posterHeight,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              "https://image.tmdb.org/t/p/w300${tvShow.poster_path}"
+                                            )
+                                          )
+                                        ),
+                                      ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: false)
                                     ),
-                                  ) : NoMediaPosterPath(posterHeight: posterHeight, isMovie: false)
-                                ),
 
-                                Container(
-                                  padding: const EdgeInsets.all(2),
-                                  width: posterHeight / 1.5,
-                                  child: Text(
-                                    tvShow.original_name!,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      overflow: TextOverflow.ellipsis
-                                    ),
-                                  ),
-                                )
-                              ],
-                            );
-                          }).toList(),
+                                    Container(
+                                      padding: const EdgeInsets.all(2),
+                                      width: posterHeight / 1.5,
+                                      child: Text(
+                                        tvShow.original_name!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          overflow: TextOverflow.ellipsis
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              }).toList(),
+                            ),
                         ),
-                    ),
-                  )
-                  : Expanded(
-                    child: ListView(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 50, right: 40),
-                          child: SvgPicture.asset("assets/search.svg", width: 200)
-                        ),
-                  
-                        const SizedBox(height: 20,),
-                  
-                        const Text(
-                          "Search a movie or a show",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  )
+                      )
+                    : WarningImages("not-found", "No data found")
+                  : WarningImages("search", "Search a Movie or a Tv Show")
               ],
             ),
           );
@@ -243,4 +224,29 @@ class _SearchPageState extends State<SearchPage> {
       },
     );
   }
+}
+
+Widget WarningImages(String image, String text) {
+  return Expanded(
+    child: ListView(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(top: 150, right: 40),
+          child: SvgPicture.asset('assets/$image.svg', width: 200)
+        ),
+  
+        const SizedBox(height: 20,),
+  
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+            color: Colors.white
+          ),
+          textAlign: TextAlign.center,
+        )
+      ],
+    ),
+  );
 }
