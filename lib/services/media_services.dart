@@ -6,7 +6,6 @@ import 'package:mediafy/models/crew_model.dart';
 import 'package:mediafy/models/keywords_model.dart';
 import 'package:mediafy/models/movie_model.dart';
 import 'package:mediafy/models/tvshow_model.dart';
-import 'package:mediafy/screens/movie_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 String? apiKey = dotenv.env['TMDB_API_KEY'];

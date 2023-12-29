@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mediafy/components/LoadingMedia.dart';
@@ -12,7 +11,6 @@ import 'package:mediafy/models/cast_model.dart';
 import 'package:mediafy/models/crew_model.dart';
 import 'package:mediafy/models/keywords_model.dart';
 import 'package:mediafy/models/media_functions_model.dart';
-import 'package:mediafy/models/movie_model.dart';
 import 'dart:ui' as ui;
 
 import 'package:mediafy/models/tvshow_model.dart';

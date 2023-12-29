@@ -4,7 +4,6 @@ import 'package:mediafy/models/crew_model.dart';
 import 'package:mediafy/models/keywords_model.dart';
 import 'package:mediafy/models/movie_model.dart';
 import 'package:mediafy/models/tvshow_model.dart';
-import 'package:mediafy/screens/movie_screen.dart';
 
 abstract class CubitStates extends Equatable {}
 
@@ -39,13 +38,13 @@ class TvShowsState extends CubitStates {
 class MovieState extends CubitStates {
   MovieState({ required this.movieId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations, required this.hasData });
 
-  int movieId;
-  MovieDetails details;
-  List<Cast> cast;
-  List<Crew> crew;
-  List<Keyword> keywords;
-  List<Movie> recommendations;
-  bool hasData;
+  final int movieId;
+  final MovieDetails details;
+  final List<Cast> cast;
+  final List<Crew> crew;
+  final List<Keyword> keywords;
+  final List<Movie> recommendations;
+  final bool hasData;
 
   @override
   List<Object> get props => [hasData, movieId, details, cast, crew, keywords, recommendations];
@@ -59,12 +58,12 @@ class LoadingMovie extends CubitStates {
 class TvShowState extends CubitStates {
   TvShowState({ required this.tvShowId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations });
 
-  int tvShowId;
-  TvShowDetails details;
-  List<Cast> cast;
-  List<Crew> crew;
-  List<Keyword> keywords;
-  List<TvShow> recommendations;
+  final int tvShowId;
+  final TvShowDetails details;
+  final List<Cast> cast;
+  final List<Crew> crew;
+  final List<Keyword> keywords;
+  final List<TvShow> recommendations;
 
   @override
   List<Object> get props => [tvShowId];

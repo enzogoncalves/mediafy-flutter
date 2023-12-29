@@ -5,7 +5,6 @@ import 'package:mediafy/models/crew_model.dart';
 import 'package:mediafy/models/keywords_model.dart';
 import 'package:mediafy/models/movie_model.dart';
 import 'package:mediafy/models/tvshow_model.dart';
-import 'package:mediafy/screens/movie_screen.dart';
 import 'package:mediafy/services/media_services.dart';
 
 class AppCubit extends Cubit<CubitStates> {

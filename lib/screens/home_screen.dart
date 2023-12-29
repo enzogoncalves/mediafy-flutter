@@ -7,9 +7,9 @@ import 'package:mediafy/pages/search_page.dart';
 import 'package:mediafy/pages/tv_shows_page.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key, required this.page});
+  const HomeScreen({super.key, required this.page});
 
-  int page;
+  final int page;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

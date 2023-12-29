@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
-import 'package:mediafy/misc/colors.dart';
 import 'package:mediafy/models/movie_model.dart';
 import 'package:mediafy/models/tvshow_model.dart';
+
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -38,8 +39,8 @@ class _SearchPageState extends State<SearchPage> {
                 Container(
                   height: 120,
                   decoration: BoxDecoration(
-                    color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(5)
+                    color: Colors.blueGrey[900],
+                    borderRadius: BorderRadius.circular(10)
                   ),
                   child: Column(
                     children: [
@@ -49,7 +50,7 @@ class _SearchPageState extends State<SearchPage> {
                           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                           decoration: BoxDecoration(
                             color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(5)
+                            borderRadius: BorderRadius.circular(10)
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,8 +78,11 @@ class _SearchPageState extends State<SearchPage> {
 
                       // Media type toggle
                       Container(
-                        color: Colors.blueGrey[900],
                         padding: const EdgeInsets.symmetric(vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey[900],
+                          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: mediaTypes.map((e) {
@@ -208,12 +212,33 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                     ),
                   )
-                  : Container()
+                  : Expanded(
+                    child: ListView(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 50, right: 40),
+                          child: SvgPicture.asset("assets/search.svg", width: 200)
+                        ),
+                  
+                        const SizedBox(height: 20,),
+                  
+                        const Text(
+                          "Search a movie or a show",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  )
               ],
             ),
           );
         } else {
-          return Placeholder();
+          return const Placeholder();
         }
       },
     );

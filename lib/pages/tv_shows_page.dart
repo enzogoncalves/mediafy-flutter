@@ -4,7 +4,6 @@ import 'package:mediafy/components/LoadingMoviesTvShows.dart';
 import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
-import 'package:mediafy/models/movie_model.dart';
 import 'package:mediafy/models/tvshow_model.dart';
 
 class TvShowsPage extends StatelessWidget {
