@@ -36,7 +36,7 @@ class TvShowsState extends CubitStates {
 }
 
 class MovieState extends CubitStates {
-  MovieState({ required this.movieId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations, required this.hasData });
+  MovieState({ required this.movieId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations, required this.primitiveState });
 
   final int movieId;
   final MovieDetails details;
@@ -44,10 +44,10 @@ class MovieState extends CubitStates {
   final List<Crew> crew;
   final List<Keyword> keywords;
   final List<Movie> recommendations;
-  final bool hasData;
+  final String primitiveState;
 
   @override
-  List<Object> get props => [hasData, movieId, details, cast, crew, keywords, recommendations];
+  List<Object> get props => [movieId, details, cast, crew, keywords, recommendations];
 }
 
 class LoadingMovie extends CubitStates {
@@ -56,7 +56,7 @@ class LoadingMovie extends CubitStates {
 }
 
 class TvShowState extends CubitStates {
-  TvShowState({ required this.tvShowId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations });
+  TvShowState({ required this.tvShowId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations, required this.primitiveState });
 
   final int tvShowId;
   final TvShowDetails details;
@@ -64,6 +64,7 @@ class TvShowState extends CubitStates {
   final List<Crew> crew;
   final List<Keyword> keywords;
   final List<TvShow> recommendations;
+  final String primitiveState;
 
   @override
   List<Object> get props => [tvShowId];

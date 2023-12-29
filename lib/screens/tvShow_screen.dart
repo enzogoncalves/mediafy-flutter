@@ -31,8 +31,6 @@ class TvShowScreen extends StatelessWidget {
             List<Keyword> keywords = state.keywords;
             List<TvShow> recommendations = state.recommendations;
             MediaFunctions mediaFunctions = MediaFunctions();
- 
-            print(cast);
 
             return Scaffold(
               appBar: AppBar(

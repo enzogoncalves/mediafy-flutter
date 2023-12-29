@@ -67,6 +67,14 @@ class AppCubit extends Cubit<CubitStates> {
   List<MovieState> moviesInCache = [];
 
   showMoviePage(int movieId) async {
+    String primitiveState = "";
+
+    if(state is MoviesState) {
+      primitiveState = "MoviesState";
+    } else if(state is SearchPageState) {
+      primitiveState = "SearchPageState";
+    }
+
     emit(LoadingMovie());
     
     List movieData = await Future.wait([
@@ -85,7 +93,7 @@ class AppCubit extends Cubit<CubitStates> {
     List<Keyword> keywords = movieData[2] as List<Keyword>;
     List<Movie> recommendations = movieData[3] as List<Movie>;
 
-    MovieState movieState = MovieState(movieId: movieId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations, hasData: false);
+    MovieState movieState = MovieState(movieId: movieId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations, primitiveState: primitiveState);
 
     moviesInCache.add(movieState);
 
@@ -93,10 +101,16 @@ class AppCubit extends Cubit<CubitStates> {
   }
 
   backToPreviousMovie() {
+    String moviePrimitiveState = moviesInCache[moviesInCache.length - 1].primitiveState;
+
     moviesInCache.removeLast();
 
     if(moviesInCache.isEmpty) {
-      goToMoviesPage();
+      if(moviePrimitiveState == "MoviesState") {
+        goToMoviesPage();
+      } else if(moviePrimitiveState == "SearchPageState") {
+        goToSearchPage();
+      }
       return;
     } else {
       emit(moviesInCache.last);
@@ -106,6 +120,14 @@ class AppCubit extends Cubit<CubitStates> {
   List<TvShowState> tvShowsInCache = [];
 
   showTvShowPage(int tvShowId) async {
+    String primitiveState = "";
+
+    if(state is TvShowsState) {
+      primitiveState = "TvShowsState";
+    } else if(state is SearchPageState) {
+      primitiveState = "SearchPageState";
+    }
+
     emit(LoadingTvShow());
 
     List tvShowData = await Future.wait([
@@ -124,7 +146,7 @@ class AppCubit extends Cubit<CubitStates> {
     List<Keyword> keywords = tvShowData[2] as List<Keyword>;
     List<TvShow> recommendations = tvShowData[3] as List<TvShow>;
 
-    TvShowState tvShowState = TvShowState(tvShowId: tvShowId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations);
+    TvShowState tvShowState = TvShowState(tvShowId: tvShowId, details: details, cast: cast, crew: crew, keywords: keywords, recommendations: recommendations, primitiveState: primitiveState);
 
     tvShowsInCache.add(tvShowState);
 
@@ -132,10 +154,16 @@ class AppCubit extends Cubit<CubitStates> {
   }
 
   backToPreviousTvShow() {
+    String tvShowPrimitiveState = tvShowsInCache[tvShowsInCache.length - 1].primitiveState;
+
     tvShowsInCache.removeLast();
 
     if(tvShowsInCache.isEmpty) {
-      goToTvSeriesPage();
+      if(tvShowPrimitiveState == "TvShowsState") {
+        goToTvSeriesPage();
+      } else if(tvShowPrimitiveState == "SearchPageState") {
+        goToSearchPage();
+      }
       return;
     } else {
       emit(tvShowsInCache.last);
@@ -160,8 +188,6 @@ class AppCubit extends Cubit<CubitStates> {
     }
     
     List result = await media.search(mediaType, query);
-
-    print("Again");
 
     finalSearchPageState.query = query;
     finalSearchPageState.hasData = true;
