@@ -67,9 +67,7 @@ flutter:
   uses-material-design: true
   assets:
     - .env
-    - assets/search.svg
-    - assets/not-found.svg
-    - assets/loader.png
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

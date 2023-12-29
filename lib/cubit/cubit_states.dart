@@ -12,6 +12,11 @@ class InitialState extends CubitStates {
   List<Object> get props => [];
 }
 
+class WelcomeState extends CubitStates {
+  @override
+  List<Object> get props => [];
+}
+
 class MoviesState extends CubitStates {
   MoviesState({ required this.trendingMovies, required this.topRatedMovies, required this.upcomingMovies, required this.hasData });
 
@@ -71,11 +76,6 @@ class TvShowState extends CubitStates {
 }
 
 class LoadingTvShow extends CubitStates {
-  @override
-  List<Object> get props => [];
-}
-
-class LoadingState extends CubitStates {
   @override
   List<Object> get props => [];
 }

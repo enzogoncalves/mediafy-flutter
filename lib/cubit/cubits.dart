@@ -9,7 +9,7 @@ import 'package:mediafy/services/media_services.dart';
 
 class AppCubit extends Cubit<CubitStates> {
   AppCubit({ required this.media}) : super(InitialState()) {
-    goToMoviesPage();
+    emit(WelcomeState());
   }
 
   MediaServices media;
