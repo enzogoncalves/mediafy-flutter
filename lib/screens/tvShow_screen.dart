@@ -289,7 +289,7 @@ class TvShowScreen extends StatelessWidget {
                                           const SizedBox(height: 5,),
                               
                                           Text(
-                                            castMember.character!.length <= 30 ? castMember.character! : '${castMember.character!.split(' ').getRange(0, 3).join(' ')}...',
+                                            castMember.character!.length <= 25 ? castMember.character! : '${castMember.character!.split(' ').getRange(0, 3).join(' ')}...',
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 14
