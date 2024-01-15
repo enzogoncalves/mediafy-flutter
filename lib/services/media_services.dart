@@ -8,10 +8,10 @@ import 'package:mediafy/models/movie_model.dart';
 import 'package:mediafy/models/tvshow_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-String? apiKey = dotenv.env['TMDB_API_KEY'];
+String? apiKey = dotenv.env["TMDB_API_KEY"];
 
 class MediaServices {
-  Future<List<Movie>> getTopRatedMovies() async  {
+  Future<List<Movie>> getTopRatedMovies() async {
     final url = Uri.parse("https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
     final res = await http.get(url);
 
@@ -20,11 +20,9 @@ class MediaServices {
       if (data.containsKey('results')) {
         List moviesData = data["results"];
 
-        List<Movie> movies = (moviesData)
-          .map((item) => Movie(media: item))
-          .toList();
+        List<Movie> movies = (moviesData).map((item) => Movie(media: item)).toList();
 
-          return movies;
+        return movies;
       } else {
         return [];
       }
@@ -33,7 +31,7 @@ class MediaServices {
     }
   }
 
-  Future<List<Movie>> getTrendingMovies() async  {
+  Future<List<Movie>> getTrendingMovies() async {
     final url = Uri.parse("https://api.themoviedb.org/3/trending/movie/day?api_key=$apiKey");
     final res = await http.get(url);
 
@@ -42,11 +40,9 @@ class MediaServices {
       if (data.containsKey('results')) {
         List moviesData = data["results"];
 
-        List<Movie> movies = (moviesData)
-          .map((item) => Movie(media: item))
-          .toList();
+        List<Movie> movies = (moviesData).map((item) => Movie(media: item)).toList();
 
-          return movies;
+        return movies;
       } else {
         return [];
       }
@@ -55,7 +51,7 @@ class MediaServices {
     }
   }
 
-  Future<List<Movie>> getUpcomingMovies() async  {
+  Future<List<Movie>> getUpcomingMovies() async {
     final url = Uri.parse("https://api.themoviedb.org/3/discover/movie?api_key=$apiKey&include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2023-12-25&sort_by=popularity.desc");
     final res = await http.get(url);
 
@@ -64,13 +60,11 @@ class MediaServices {
       if (data.containsKey('results')) {
         List moviesData = data["results"];
 
-        List<Movie> movies = (moviesData)
-          .map((item) => Movie(media: item))
-          .toList();
+        List<Movie> movies = (moviesData).map((item) => Movie(media: item)).toList();
 
-          movies.map((e) => e.backdrop_path != null);
+        movies.map((e) => e.backdrop_path != null);
 
-          return movies;
+        return movies;
       } else {
         return [];
       }
@@ -79,7 +73,7 @@ class MediaServices {
     }
   }
 
-  Future<MovieDetails> getMovieDetails(int movieId) async  {
+  Future<MovieDetails> getMovieDetails(int movieId) async {
     final url = Uri.parse("https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
@@ -88,12 +82,12 @@ class MediaServices {
       MovieDetails movieDetails = MovieDetails(movie: data);
 
       return movieDetails;
-  } else {
+    } else {
       throw Exception('Failed to load data');
     }
   }
 
-  Future<List<Keyword>> getMovieKeywords(int movieId) async  {
+  Future<List<Keyword>> getMovieKeywords(int movieId) async {
     final url = Uri.parse("https://api.themoviedb.org/3/movie/$movieId/keywords?api_key=$apiKey");
     final res = await http.get(url);
 
@@ -105,12 +99,12 @@ class MediaServices {
       List<Keyword> keywords = keywordsList.map((e) => Keyword(keyword: e)).toList();
 
       return keywords;
-  } else {
+    } else {
       throw Exception('Failed to load data');
     }
   }
 
-  Future<List<Movie>> getMovieRecommendations(int movieId) async  {
+  Future<List<Movie>> getMovieRecommendations(int movieId) async {
     final url = Uri.parse("https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=$apiKey&language=en-US&page=1");
     final res = await http.get(url);
 
@@ -122,29 +116,24 @@ class MediaServices {
       List<Movie> movieRecommendations = movies.map((e) => Movie(media: e)).toList();
 
       return movieRecommendations;
-  } else {
+    } else {
       throw Exception('Failed to load data');
     }
   }
-  
-  Future<Map<String, dynamic>> getMovieCredits(int movieId) async  {
+
+  Future<Map<String, dynamic>> getMovieCredits(int movieId) async {
     final url = Uri.parse("https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
       final data = json.decode(res.body);
 
-      Map<String, List> formatedCredit = { "cast": [], "crew": [] };
+      Map<String, List> formatedCredit = {"cast": [], "crew": []};
 
-      if(data.containsKey("cast")) {
+      if (data.containsKey("cast")) {
         List castData = data["cast"];
 
-        List<Cast> cast = castData.map((item) => Cast(
-          character: item["character"],
-          id: item["id"],
-          name: item["name"],
-          profile_path: item["profile_path"]
-        )).toList();
+        List<Cast> cast = castData.map((item) => Cast(character: item["character"], id: item["id"], name: item["name"], profile_path: item["profile_path"])).toList();
         formatedCredit["cast"] = cast;
       }
 
@@ -153,14 +142,8 @@ class MediaServices {
 
         for (var i = 0; i < crewData.length; i++) {
           int? crewIndex;
-          // bool found = formatedCredit["crew"].((element, index){
-          //   crewIndex = index;
-          //   return element.name == crewData[i].name;
-          // });
 
-          List elementsIndex = formatedCredit["crew"]!
-              .where((element) => element["name"] == crewData[i]["name"])
-              .toList();
+          List elementsIndex = formatedCredit["crew"]!.where((element) => element["name"] == crewData[i]["name"]).toList();
 
           bool found = !listEquals([], elementsIndex);
 
@@ -182,11 +165,7 @@ class MediaServices {
       }
       formatedCredit["crew"]!.sort((a, b) => b["jobs"].length - a["jobs"].length);
 
-      List<Crew> crew =
-          formatedCredit["crew"]!.map((item) => Crew(
-            jobs: item["jobs"],
-            name: item["name"]
-          )).toList();
+      List<Crew> crew = formatedCredit["crew"]!.map((item) => Crew(jobs: item["jobs"], name: item["name"])).toList();
 
       formatedCredit["crew"] = crew;
 
@@ -194,9 +173,9 @@ class MediaServices {
     } else {
       throw Exception('Failed to load data');
     }
-  }  
+  }
 
-  Future<List<TvShow>> getTopRatedTvShows() async  {
+  Future<List<TvShow>> getTopRatedTvShows() async {
     final url = Uri.parse("https://api.themoviedb.org/3/tv/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
     final res = await http.get(url);
 
@@ -205,11 +184,9 @@ class MediaServices {
       if (data.containsKey('results')) {
         List tvShowsData = data["results"];
 
-        List<TvShow> tvShows = (tvShowsData)
-          .map((item) => TvShow(tvShow: item))
-          .toList();
+        List<TvShow> tvShows = (tvShowsData).map((item) => TvShow(tvShow: item)).toList();
 
-          return tvShows;
+        return tvShows;
       } else {
         return [];
       }
@@ -218,7 +195,7 @@ class MediaServices {
     }
   }
 
-  Future<List<TvShow>> getTrendingTvShows() async  {
+  Future<List<TvShow>> getTrendingTvShows() async {
     final url = Uri.parse("https://api.themoviedb.org/3/trending/tv/day?api_key=$apiKey");
     final res = await http.get(url);
 
@@ -227,11 +204,9 @@ class MediaServices {
       if (data.containsKey('results')) {
         List tvShowsData = data["results"];
 
-        List<TvShow> tvShows = (tvShowsData)
-          .map((item) => TvShow(tvShow: item))
-          .toList();
+        List<TvShow> tvShows = (tvShowsData).map((item) => TvShow(tvShow: item)).toList();
 
-          return tvShows;
+        return tvShows;
       } else {
         return [];
       }
@@ -240,7 +215,7 @@ class MediaServices {
     }
   }
 
-Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
+  Future<TvShowDetails> getTvShowDetails(int tvShowId) async {
     final url = Uri.parse("https://api.themoviedb.org/3/tv/$tvShowId?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
@@ -249,12 +224,12 @@ Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
       TvShowDetails tvShowsDetails = TvShowDetails(tvShow: data);
 
       return tvShowsDetails;
-  } else {
+    } else {
       throw Exception('Failed to load data');
     }
   }
 
-  Future<List<Keyword>> getTvShowKeywords(int tvShowId) async  {
+  Future<List<Keyword>> getTvShowKeywords(int tvShowId) async {
     final url = Uri.parse("https://api.themoviedb.org/3/tv/$tvShowId/keywords?api_key=$apiKey");
     final res = await http.get(url);
 
@@ -266,12 +241,12 @@ Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
       List<Keyword> keywords = keywordsList.map((e) => Keyword(keyword: e)).toList();
 
       return keywords;
-  } else {
+    } else {
       throw Exception('Failed to load data');
     }
   }
 
-  Future<List<TvShow>> getTvShowRecommendations(int tvShowId) async  {
+  Future<List<TvShow>> getTvShowRecommendations(int tvShowId) async {
     final url = Uri.parse("https://api.themoviedb.org/3/tv/$tvShowId/recommendations?api_key=$apiKey&language=en-US&page=1");
     final res = await http.get(url);
 
@@ -287,25 +262,20 @@ Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
       throw Exception('Failed to load data');
     }
   }
-  
-  Future<Map<String, dynamic>> getTvShowCredits(int tvShowId) async  {
+
+  Future<Map<String, dynamic>> getTvShowCredits(int tvShowId) async {
     final url = Uri.parse("https://api.themoviedb.org/3/tv/$tvShowId/credits?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
       final data = json.decode(res.body);
 
-      Map<String, List> formatedCredit = { "cast": [], "crew": [] };
+      Map<String, List> formatedCredit = {"cast": [], "crew": []};
 
-      if(data.containsKey("cast")) {
+      if (data.containsKey("cast")) {
         List castData = data["cast"];
 
-        List<Cast> cast = castData.map((item) => Cast(
-          character: item["character"],
-          id: item["id"],
-          name: item["name"],
-          profile_path: item["profile_path"]
-        )).toList();
+        List<Cast> cast = castData.map((item) => Cast(character: item["character"], id: item["id"], name: item["name"], profile_path: item["profile_path"])).toList();
         formatedCredit["cast"] = cast;
       }
 
@@ -314,14 +284,8 @@ Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
 
         for (var i = 0; i < crewData.length; i++) {
           int? crewIndex;
-          // bool found = formatedCredit["crew"].((element, index){
-          //   crewIndex = index;
-          //   return element.name == crewData[i].name;
-          // });
 
-          List elementsIndex = formatedCredit["crew"]!
-              .where((element) => element["name"] == crewData[i]["name"])
-              .toList();
+          List elementsIndex = formatedCredit["crew"]!.where((element) => element["name"] == crewData[i]["name"]).toList();
 
           bool found = !listEquals([], elementsIndex);
 
@@ -343,11 +307,7 @@ Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
       }
       formatedCredit["crew"]!.sort((a, b) => b["jobs"].length - a["jobs"].length);
 
-      List<Crew> crew =
-          formatedCredit["crew"]!.map((item) => Crew(
-            jobs: item["jobs"],
-            name: item["name"]
-          )).toList();
+      List<Crew> crew = formatedCredit["crew"]!.map((item) => Crew(jobs: item["jobs"], name: item["name"])).toList();
 
       formatedCredit["crew"] = crew;
 
@@ -355,10 +315,9 @@ Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
     } else {
       throw Exception('Failed to load data');
     }
-  } 
+  }
 
   Future<List> search(String mediaType, String query) async {
-
     final url = Uri.parse("https://api.themoviedb.org/3/search/$mediaType?api_key=$apiKey&language=en-US&query=$query&include_adult=false");
     final res = await http.get(url);
 
@@ -367,14 +326,13 @@ Future<TvShowDetails> getTvShowDetails(int tvShowId) async  {
 
       List searchResults = data["results"];
 
-      if(mediaType == "movie") {
+      if (mediaType == "movie") {
         List<Movie> movies = searchResults.map((e) => Movie(media: e)).toList();
         return movies;
       } else {
         List<TvShow> tvShows = searchResults.map((e) => TvShow(tvShow: e)).toList();
         return tvShows;
       }
-
     } else {
       throw Exception('Failed to load data');
     }

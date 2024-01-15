@@ -18,7 +18,7 @@ class WelcomeState extends CubitStates {
 }
 
 class MoviesState extends CubitStates {
-  MoviesState({ required this.trendingMovies, required this.topRatedMovies, required this.upcomingMovies, required this.hasData });
+  MoviesState({required this.trendingMovies, required this.topRatedMovies, required this.upcomingMovies, required this.hasData});
 
   List<Movie> trendingMovies;
   List<Movie> topRatedMovies;
@@ -30,8 +30,8 @@ class MoviesState extends CubitStates {
 }
 
 class TvShowsState extends CubitStates {
-  TvShowsState({ required this.trendingTvShows, required this.topRatedTvShows, required this.hasData });
-  
+  TvShowsState({required this.trendingTvShows, required this.topRatedTvShows, required this.hasData});
+
   List<TvShow> trendingTvShows;
   List<TvShow> topRatedTvShows;
   bool hasData;
@@ -41,7 +41,7 @@ class TvShowsState extends CubitStates {
 }
 
 class MovieState extends CubitStates {
-  MovieState({ required this.movieId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations, required this.primitiveState });
+  MovieState({required this.movieId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations, required this.primitiveState});
 
   final int movieId;
   final MovieDetails details;
@@ -61,7 +61,7 @@ class LoadingMovie extends CubitStates {
 }
 
 class TvShowState extends CubitStates {
-  TvShowState({ required this.tvShowId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations, required this.primitiveState });
+  TvShowState({required this.tvShowId, required this.details, required this.cast, required this.crew, required this.keywords, required this.recommendations, required this.primitiveState});
 
   final int tvShowId;
   final TvShowDetails details;
@@ -81,7 +81,7 @@ class LoadingTvShow extends CubitStates {
 }
 
 class SearchPageState extends CubitStates {
-  SearchPageState({ required this.query, required this.movies, required this.tvShows, required this.mediaType, required this.hasData });
+  SearchPageState({required this.query, required this.movies, required this.tvShows, required this.mediaType, required this.hasData});
 
   String query;
   List<Movie> movies;
@@ -91,4 +91,12 @@ class SearchPageState extends CubitStates {
 
   @override
   List<Object> get props => [query, movies, tvShows, mediaType, hasData];
+}
+
+class ErrorState extends CubitStates {
+  ErrorState({this.error});
+
+  dynamic error;
+  @override
+  List<Object> get props => [];
 }

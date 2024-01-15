@@ -22,69 +22,56 @@ class TvShowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // List cast;
-    return SafeArea(
-      child: BlocBuilder<AppCubit, CubitStates>(
-        builder: (context, state) {
-          if(state is TvShowState) {
-            TvShowDetails tvShow = state.details;
-            List<Cast> cast = state.cast; 
-            List<Crew> crew = state.crew;
-            List<Keyword> keywords = state.keywords;
-            List<TvShow> recommendations = state.recommendations;
-            MediaFunctions mediaFunctions = MediaFunctions();
+    return SafeArea(child: BlocBuilder<AppCubit, CubitStates>(
+      builder: (context, state) {
+        if (state is TvShowState) {
+          TvShowDetails tvShow = state.details;
+          List<Cast> cast = state.cast;
+          List<Crew> crew = state.crew;
+          List<Keyword> keywords = state.keywords;
+          List<TvShow> recommendations = state.recommendations;
+          MediaFunctions mediaFunctions = MediaFunctions();
 
-            return Scaffold(
+          return Scaffold(
               appBar: AppBar(
-                title: Text(tvShow.original_name!),
-                centerTitle: true,
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      BlocProvider.of<AppCubit>(context).backToPreviousTvShow();            
-                    }, 
-                    icon: Icon(Icons.arrow_back)
-                  )
-                ],
-              ),
+                  title: Text(tvShow.name!),
+                  centerTitle: true,
+                  leading: IconButton(
+                      onPressed: () {
+                        BlocProvider.of<AppCubit>(context).backToPreviousTvShow();
+                      },
+                      icon: const Icon(Icons.arrow_back))),
               backgroundColor: AppColors.mainColor,
-              body: Container(
-                child: ListView(
-                  children: [
-                    Stack(
-                      children: [
-                        // Backdrop image with blur and a blue background with some opacity
-                        Stack(
-                          children: [
-                            Container(
-                              height: 384,
-                              decoration: BoxDecoration(
+              body: ListView(
+                children: [
+                  Stack(
+                    children: [
+                      // Backdrop image with blur and a blue background with some opacity
+                      Stack(
+                        children: [
+                          Container(
+                            height: 384,
+                            decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                    "https://image.tmdb.org/t/p/original${tvShow.backdrop_path}"
-                                  ),
-                                  opacity: .4,
-                                  fit: BoxFit.cover,
-                                  
-                                )
+                              image: NetworkImage("https://image.tmdb.org/t/p/original${tvShow.backdrop_path}"),
+                              opacity: .4,
+                              fit: BoxFit.cover,
+                            )),
+                          ),
+                          SizedBox(
+                            height: 384,
+                            child: BackdropFilter(
+                              filter: ui.ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                              child: Container(
+                                color: Colors.blue[900]!.withOpacity(.1),
                               ),
                             ),
-                            SizedBox(
-                              height: 384,
-                              child: BackdropFilter(
-                                filter: ui.ImageFilter.blur(
-                                  sigmaX: 6,
-                                  sigmaY: 6
-                                ),
-                                child: Container(
-                                  color: Colors.blue[900]!.withOpacity(.1),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
 
-                        // Principal informations about the movie
-                        Container(
+                      // Principal informations about the movie
+                      Container(
                           margin: const EdgeInsets.all(8),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,118 +80,99 @@ class TvShowScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Poster(posterPath: tvShow.poster_path, height: 192, width: 128),
-
-                                  const SizedBox(width: 10,),
-
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          tvShow.original_name!,
-                                          style: const TextStyle(
-                                            overflow: TextOverflow.clip,
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold
-                                          ),
+                                          tvShow.name!,
+                                          style: const TextStyle(overflow: TextOverflow.clip, color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                                         ),
-
                                         tvShow.first_air_date!.isNotEmpty
-                                        ? Column(
-                                          children: [
-                                            const SizedBox(height: 4,),
-                                      
-                                            Text(
-                                              "(${tvShow.first_air_date!.substring(0, 4)})",
-                                              style: const TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 20
-                                              ),
-                                            )
-                                          ],
-                                        ) : Container()
+                                            ? Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  Text(
+                                                    "(${tvShow.first_air_date!.substring(0, 4)})",
+                                                    style: const TextStyle(color: Colors.grey, fontSize: 20),
+                                                  )
+                                                ],
+                                              )
+                                            : Container()
                                       ],
                                     ),
                                   )
                                 ],
                               ),
-
-                              const SizedBox(height: 12,),
-
+                              const SizedBox(
+                                height: 12,
+                              ),
                               Wrap(
                                 spacing: 16,
                                 runSpacing: 16,
                                 children: [
                                   tvShow.first_air_date!.isNotEmpty
-                                  ? Text(
-                                    mediaFunctions.formatDate(tvShow.first_air_date!)["date"],
-                                    style: const TextStyle(
-                                      color: Colors.white
-                                    ),
-                                  ) : Container(),
-
+                                      ? Text(
+                                          mediaFunctions.formatDate(tvShow.first_air_date!)["date"],
+                                          style: const TextStyle(color: Colors.white),
+                                        )
+                                      : Container(),
                                   Wrap(
                                     children: mediaFunctions.formatGenres(tvShow.genres).split('').map((genre) {
                                       return Text(
                                         genre,
-                                        style: const TextStyle(
-                                          color: Colors.white
-                                        ),
+                                        style: const TextStyle(color: Colors.white),
                                       );
                                     }).toList(),
                                   ),
-
-                                  tvShow.episode_run_time!.isNotEmpty 
-                                  ? Text(
-                                   tvShow.episode_run_time![0].toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white
-                                    ),
-                                  ) : Container()
+                                  tvShow.episode_run_time!.isNotEmpty
+                                      ? Text(
+                                          tvShow.episode_run_time![0].toString(),
+                                          style: const TextStyle(color: Colors.white),
+                                        )
+                                      : Container()
                                 ],
                               ),
-
-
-                              tvShow.tagline!.isNotEmpty 
-                              ? Column(
-                                children: [
-                                  const SizedBox(height: 20,),
-
-                                  Text(
-                                    tvShow.tagline!,
-                                    style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontStyle: FontStyle.italic
-                                    ),
-                                  ),
-                                ],
-                              ) 
-                              : Container(),
-
-                              const SizedBox(height: 20,),
-
+                              tvShow.tagline!.isNotEmpty
+                                  ? Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          tvShow.tagline!,
+                                          style: TextStyle(color: Colors.grey[400], fontStyle: FontStyle.italic),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                              const SizedBox(
+                                height: 20,
+                              ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const TitleLarge("Synopse"),
                                   Text(
                                     tvShow.overview!,
-                                    style: const TextStyle(
-                                      color: Colors.white
-                                    ),
+                                    style: const TextStyle(color: Colors.white),
                                   )
                                 ],
                               ),
-
-                              const SizedBox(height: 20,),
-
+                              const SizedBox(
+                                height: 20,
+                              ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: crew.getRange(0, crew.length >= 5 ? 5 : crew.length).map((e) {
                                   String jobs = '';
                                   e.jobs!.forEach((element) {
-                                    if(e.jobs!.indexOf(element) == e.jobs!.length - 1) {
+                                    if (e.jobs!.indexOf(element) == e.jobs!.length - 1) {
                                       jobs += element;
                                     } else {
                                       jobs += '$element, ';
@@ -216,216 +184,216 @@ class TvShowScreen extends StatelessWidget {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(e.name!, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600,)),
-                                  
-                                        const SizedBox(height: 8,),
-                                  
-                                        Text(jobs, style: const TextStyle(color: Colors.white),),
+                                        Text(e.name!,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            )),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        Text(
+                                          jobs,
+                                          style: const TextStyle(color: Colors.white),
+                                        ),
                                       ],
                                     ),
                                   );
                                 }).toList(),
                               )
                             ],
-                          )
-                        ),
+                          )),
+                    ],
+                  ),
 
-                      ],
-                    ),
+                  // Main Cast
+                  cast.isNotEmpty
+                      ? Container(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const TitleLarge("Main Cast"),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              SizedBox(
+                                height: 275,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: cast.length,
+                                  itemBuilder: (context, index) {
+                                    Cast castMember = cast[index];
+                                    double posterHeight = 180;
 
-                    // Main Cast
-                    cast.isNotEmpty
-                    ? Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const TitleLarge("Main Cast"),
-
-                          const SizedBox(height: 5,),
-
-                          SizedBox(
-                            height: 275,
-                            child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: cast.length,
-                            itemBuilder: (context, index) {
-                              Cast castMember = cast[index];
-                              double posterHeight = 180;
-
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    castMember.profile_path != null ? Container(
-                                      width: posterHeight / 1.5,
-                                      height: posterHeight,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            "https://image.tmdb.org/t/p/w300${castMember.profile_path}"
-                                          )
-                                        )
-                                      ),
-                                    ) : NoCastProfilePath(posterHeight: posterHeight),
-                              
-                                    Container(
-                                      padding: const EdgeInsets.all(2),
-                                      width: posterHeight / 1.5,
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 8),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            castMember.name!,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              overflow: TextOverflow.ellipsis
+                                          castMember.profile_path != null
+                                              ? Container(
+                                                  width: posterHeight / 1.5,
+                                                  height: posterHeight,
+                                                  decoration: BoxDecoration(image: DecorationImage(image: NetworkImage("https://image.tmdb.org/t/p/w300${castMember.profile_path}"))),
+                                                )
+                                              : NoCastProfilePath(posterHeight: posterHeight),
+                                          Container(
+                                            padding: const EdgeInsets.all(2),
+                                            width: posterHeight / 1.5,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  castMember.name!,
+                                                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600, overflow: TextOverflow.ellipsis),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  castMember.character!.length <= 25 ? castMember.character! : '${castMember.character!.split(' ').getRange(0, 3).join(' ')}...',
+                                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                              
-                                          const SizedBox(height: 5,),
-                              
-                                          Text(
-                                            castMember.character!.length <= 25 ? castMember.character! : '${castMember.character!.split(' ').getRange(0, 3).join(' ')}...',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14
-                                            ),
-                                          ),
+                                          )
                                         ],
                                       ),
-                                    )
-                                  ],
+                                    );
+                                  },
                                 ),
-                              );
-                            },
+                              )
+                            ],
                           ),
-                          )
-                        ],
-                      ),
-                    ) : Container(),
+                        )
+                      : Container(),
 
-                    recommendations.isNotEmpty ? const SizedBox(height: 20,) : Container(),
+                  recommendations.isNotEmpty
+                      ? const SizedBox(
+                          height: 20,
+                        )
+                      : Container(),
 
-                    // TvShow Recommendaitions
-                    recommendations.isNotEmpty ? Container(
-                      padding: const EdgeInsets.all(8),
+                  // TvShow Recommendaitions
+                  recommendations.isNotEmpty
+                      ? Container(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const TitleLarge("Recommendations"),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              SizedBox(
+                                height: 225,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: recommendations.length,
+                                  itemBuilder: (context, index) {
+                                    TvShow tvShowRecommendations = recommendations[index];
+                                    double posterHeight = 180;
+
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        GestureDetector(
+                                            onTap: () {
+                                              context.read<AppCubit>().showTvShowPage(tvShowRecommendations.id!);
+                                              // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
+                                            },
+                                            child: Poster(height: posterHeight, posterPath: tvShowRecommendations.poster_path)),
+                                        Container(
+                                          padding: const EdgeInsets.all(2),
+                                          width: posterHeight / 1.5,
+                                          child: Text(
+                                            tvShowRecommendations.name!,
+                                            style: const TextStyle(color: Colors.white, fontSize: 14, overflow: TextOverflow.ellipsis),
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container(),
+
+                  // Details
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4, bottom: 4, left: 4),
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(border: Border.all(width: 2, color: Colors.grey)),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const TitleLarge("Recommendations"),
-
-                          const SizedBox(height: 5,),
-
-                          SizedBox(
-                            height: 225,
-                            child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: recommendations.length,
-                            itemBuilder: (context, index) {
-                              TvShow tvShowRecommendations = recommendations[index];
-                              double posterHeight = 180;
-
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                     context.read<AppCubit>().showTvShowPage(tvShowRecommendations.id!);
-                                      // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
-                                    },
-                                    child: Poster(height: posterHeight, posterPath: tvShowRecommendations.poster_path)
-                                  ),
-
-                                  Container(
-                                    padding: const EdgeInsets.all(2),
-                                    width: posterHeight / 1.5,
-                                    child: Text(
-                                      tvShowRecommendations.original_name!,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        overflow: TextOverflow.ellipsis
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              );
-                            },
+                          MediaDetail(header: "Status", data: tvShow.status!),
+                          const SizedBox(
+                            height: 16,
                           ),
-                          )
+                          MediaDetail(header: "Original Language", data: tvShow.original_language!),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          MediaDetail(header: "Number of Seasons", data: tvShow.number_of_seasons.toString()),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          MediaDetail(header: "Original Name", data: tvShow.original_name!),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          MediaDetail(header: "Number of Episodes", data: tvShow.number_of_episodes.toString()),
+                          keywords.isNotEmpty
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    const Text(
+                                      "KeyWords",
+                                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Wrap(
+                                      spacing: 8,
+                                      runSpacing: 8,
+                                      children: keywords.map((e) {
+                                        return Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(color: Colors.grey[900], borderRadius: BorderRadius.circular(4)),
+                                          child: Text(
+                                            e.name,
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    )
+                                  ],
+                                )
+                              : Container()
                         ],
                       ),
-                    ) : Container(),
-
-                    // Details
-                    Padding(
-                      padding: const EdgeInsets.only(right: 4, bottom: 4, left: 4),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 2, color: Colors.grey)
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MediaDetail(header: "Status", data: tvShow.status!),
-                            const SizedBox(height: 16,),
-                            MediaDetail(header: "Original Language", data: tvShow.original_language!),
-                            const SizedBox(height: 16,),
-                            MediaDetail(header: "Number of Seasons", data: tvShow.number_of_seasons.toString()),
-                            const SizedBox(height: 16,),
-                            MediaDetail(header: "Number of Episodes", data: tvShow.number_of_episodes.toString()),
-                            keywords.isNotEmpty ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 16,),
-
-                                const Text(
-                                  "KeyWords",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500
-                                  ),
-                                ),
-
-                                const SizedBox(height: 10,),
-
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: keywords.map((e) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[900],
-                                        borderRadius: BorderRadius.circular(4)
-                                      ),
-                                      child: Text(e.name, style: const TextStyle(color: Colors.white),),
-                                    );
-                                  }).toList(),
-                                )
-                              ],
-                            ) : Container()
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            );
-          } else if(state is LoadingTvShow) {
-            return const LoadingMedia();
-          } else {
-            return const Center(child: Text("Erro na tela do filme"),);
-          }
-        },
-      )
-    );
+                    ),
+                  )
+                ],
+              ));
+        } else if (state is LoadingTvShow) {
+          return const LoadingMedia();
+        } else {
+          return const Center(
+            child: Text("Erro na tela do filme"),
+          );
+        }
+      },
+    ));
   }
 }

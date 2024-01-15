@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mediafy/components/Poster.dart';
-import 'package:mediafy/components/noMediaPosterPath.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
 import 'package:mediafy/models/movie_model.dart';
 import 'package:mediafy/models/tvshow_model.dart';
-
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -18,20 +16,20 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController inputController = TextEditingController();
-  
+
   List<String> mediaTypes = ["movie", "tv"];
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppCubit, CubitStates>(
-      builder: (context, state){
-        if(state is SearchPageState) {
+      builder: (context, state) {
+        if (state is SearchPageState) {
           List<Movie> movies = state.movies;
           List<TvShow> tvShows = state.tvShows;
           bool hasData = state.hasData;
           String mediaTypeSelected = state.mediaType;
 
-          inputController.text = state.query; 
+          inputController.text = state.query;
 
           return Container(
             padding: const EdgeInsets.all(8),
@@ -39,37 +37,28 @@ class _SearchPageState extends State<SearchPage> {
               children: [
                 Container(
                   height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.blueGrey[900],
-                    borderRadius: BorderRadius.circular(10)
-                  ),
+                  decoration: BoxDecoration(color: Colors.blueGrey[900], borderRadius: BorderRadius.circular(10)),
                   child: Column(
                     children: [
                       // Search bar
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(10)
-                          ),
+                          decoration: BoxDecoration(color: Colors.grey[400], borderRadius: BorderRadius.circular(10)),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Icon(Icons.search),
-                                              
-                              const SizedBox(width: 12,),
-                                              
+                              const SizedBox(
+                                width: 12,
+                              ),
                               Expanded(
                                 child: TextField(
                                   controller: inputController,
                                   onSubmitted: (value) {
                                     context.read<AppCubit>().searchQuery(mediaTypeSelected, value);
                                   },
-                                  decoration: const InputDecoration(
-                                    hintText: "Type here to search",
-                                    border: InputBorder.none
-                                  ),
+                                  decoration: const InputDecoration(hintText: "Type here to search", border: InputBorder.none),
                                 ),
                               ),
                             ],
@@ -80,10 +69,7 @@ class _SearchPageState extends State<SearchPage> {
                       // Media type toggle
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.blueGrey[900],
-                          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))
-                        ),
+                        decoration: BoxDecoration(color: Colors.blueGrey[900], borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: mediaTypes.map((e) {
@@ -95,15 +81,14 @@ class _SearchPageState extends State<SearchPage> {
                                 });
                               },
                               style: TextButton.styleFrom(
-                                backgroundColor: mediaTypeSelected == e ? Colors.white : Colors.transparent,
-                                fixedSize: const Size(100, 30),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
-                                foregroundColor: mediaTypeSelected == e ? Colors.black : Colors.white,
-                                side: mediaTypeSelected == e ? BorderSide.none : const BorderSide(),
-                                textStyle: const TextStyle(
-                                  fontSize: 16,
-                                )
-                              ),
+                                  backgroundColor: mediaTypeSelected == e ? Colors.white : Colors.transparent,
+                                  fixedSize: const Size(100, 30),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+                                  foregroundColor: mediaTypeSelected == e ? Colors.black : Colors.white,
+                                  side: mediaTypeSelected == e ? BorderSide.none : const BorderSide(),
+                                  textStyle: const TextStyle(
+                                    fontSize: 16,
+                                  )),
                               child: Text('${e[0].toUpperCase()}${e.substring(1)}'),
                             );
                           }).toList(),
@@ -112,86 +97,74 @@ class _SearchPageState extends State<SearchPage> {
                     ],
                   ),
                 ),
-
-                const SizedBox(height: 16,),
-
+                const SizedBox(
+                  height: 16,
+                ),
                 hasData
-                ? movies.isNotEmpty 
-                  ? Expanded(
-                    child: SingleChildScrollView(
-                      child: Wrap(
-                          spacing: 16,
-                          runSpacing: 16,
-                          children: movies.map((Movie movie) {
-                            double posterHeight = 180;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                  onTap: (){
-                                    BlocProvider.of<AppCubit>(context).showMoviePage(movie.id!);
-                                    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
-                                  },
-                                  child: Poster(height: posterHeight, posterPath: movie.poster_path)
-                                ),
-                    
-                                Container(
-                                  padding: const EdgeInsets.all(2),
-                                  width: posterHeight / 1.5,
-                                  child: Text(
-                                    movie.original_title!,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      overflow: TextOverflow.ellipsis
-                                    ),
-                                  ),
-                                )
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                    ),
-                  )
-                  : tvShows.isNotEmpty 
-                    ? Expanded(
-                        child: SingleChildScrollView(
-                          child: Wrap(
-                              spacing: 16,
-                              runSpacing: 16,
-                              children: tvShows.map((TvShow tvShow) {
-                                double posterHeight = 180;
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: (){
-                                        BlocProvider.of<AppCubit>(context).showTvShowPage(tvShow.id!);
-                                        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
-                                      },
-                                      child: Poster(height: posterHeight, posterPath: tvShow.poster_path)
-                                    ),
-
-                                    Container(
-                                      padding: const EdgeInsets.all(2),
-                                      width: posterHeight / 1.5,
-                                      child: Text(
-                                        tvShow.original_name!,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          overflow: TextOverflow.ellipsis
+                    ? movies.isNotEmpty
+                        ? Expanded(
+                            child: SingleChildScrollView(
+                              child: Wrap(
+                                spacing: 16,
+                                runSpacing: 16,
+                                children: movies.map((Movie movie) {
+                                  double posterHeight = 180;
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      GestureDetector(
+                                          onTap: () {
+                                            BlocProvider.of<AppCubit>(context).showMoviePage(movie.id!);
+                                            // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
+                                          },
+                                          child: Poster(height: posterHeight, posterPath: movie.poster_path)),
+                                      Container(
+                                        padding: const EdgeInsets.all(2),
+                                        width: posterHeight / 1.5,
+                                        child: Text(
+                                          movie.original_title!,
+                                          style: const TextStyle(color: Colors.white, fontSize: 14, overflow: TextOverflow.ellipsis),
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                );
-                              }).toList(),
+                                      )
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
                             ),
-                        ),
-                      )
-                    : WarningImages("not-found", "No data found")
-                  : WarningImages("search", "Search a Movie or a Tv Show")
+                          )
+                        : tvShows.isNotEmpty
+                            ? Expanded(
+                                child: SingleChildScrollView(
+                                  child: Wrap(
+                                    spacing: 16,
+                                    runSpacing: 16,
+                                    children: tvShows.map((TvShow tvShow) {
+                                      double posterHeight = 180;
+                                      return Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          GestureDetector(
+                                              onTap: () {
+                                                BlocProvider.of<AppCubit>(context).showTvShowPage(tvShow.id!);
+                                                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieScreen(movie)));
+                                              },
+                                              child: Poster(height: posterHeight, posterPath: tvShow.poster_path)),
+                                          Container(
+                                            padding: const EdgeInsets.all(2),
+                                            width: posterHeight / 1.5,
+                                            child: Text(
+                                              tvShow.name!,
+                                              style: const TextStyle(color: Colors.white, fontSize: 14, overflow: TextOverflow.ellipsis),
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              )
+                            : WarningImages("not-found", "No data found")
+                    : WarningImages("search", "Search a Movie or a Tv Show")
               ],
             ),
           );
@@ -207,20 +180,13 @@ Widget WarningImages(String image, String text) {
   return Expanded(
     child: ListView(
       children: [
-        Container(
-          margin: const EdgeInsets.only(top: 150, right: 40),
-          child: SvgPicture.asset('assets/$image.svg', width: 200)
+        Container(margin: const EdgeInsets.only(top: 150, right: 40), child: SvgPicture.asset('assets/$image.svg', width: 200)),
+        const SizedBox(
+          height: 20,
         ),
-  
-        const SizedBox(height: 20,),
-  
         Text(
           text,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w500,
-            color: Colors.white
-          ),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: Colors.white),
           textAlign: TextAlign.center,
         )
       ],

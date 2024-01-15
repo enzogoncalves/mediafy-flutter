@@ -19,14 +19,20 @@ class _CubitLogicsState extends State<CubitLogics> {
   Widget build(BuildContext context) {
     return BlocBuilder<AppCubit, CubitStates>(
       builder: (context, state) {
-        if(state is WelcomeState) {
+        if (state is WelcomeState) {
           return const WelcomeScreen();
-        } else if(state is MoviesState) {
-          return const HomeScreen(page: 1,);
+        } else if (state is MoviesState) {
+          return const HomeScreen(
+            page: 1,
+          );
         } else if (state is TvShowsState) {
-          return const HomeScreen(page: 0,);
+          return const HomeScreen(
+            page: 0,
+          );
         } else if (state is SearchPageState) {
-          return const HomeScreen(page: 2,);
+          return const HomeScreen(
+            page: 2,
+          );
         } else if (state is MovieState) {
           return const MovieScreen();
         } else if (state is LoadingMovie) {
@@ -35,7 +41,9 @@ class _CubitLogicsState extends State<CubitLogics> {
           return const TvShowScreen();
         } else if (state is LoadingTvShow) {
           return const TvShowScreen();
-        }else {
+        } else if (state is ErrorState) {
+          return Text(state.error.toString());
+        } else {
           return const Placeholder();
         }
       },

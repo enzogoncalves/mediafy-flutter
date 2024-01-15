@@ -15,18 +15,17 @@ class Poster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(posterPath != null) {
+    if (posterPath != null) {
       return Container(
-        margin: const EdgeInsets.only(right: 8),
-        width: width ?? height / 1.5,
-        height: height,
-        child: FadeInImage(
-          placeholder: const AssetImage("assets/loader.png"),
-          image: NetworkImage(
-            "https://image.tmdb.org/t/p/w300$posterPath",
-          ),
-        )
-      );
+          margin: const EdgeInsets.only(right: 8),
+          width: width ?? height / 1.5,
+          height: height,
+          child: FadeInImage(
+            placeholder: const AssetImage("assets/loader.png"),
+            image: NetworkImage(
+              "https://image.tmdb.org/t/p/w300$posterPath",
+            ),
+          ));
     } else {
       return NoMediaPosterPath(height: height, isMovie: true);
     }
