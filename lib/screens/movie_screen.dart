@@ -16,8 +16,15 @@ import 'package:mediafy/models/media_functions_model.dart';
 import 'package:mediafy/models/movie_model.dart';
 import 'dart:ui' as ui;
 
-class MovieScreen extends StatelessWidget {
+class MovieScreen extends StatefulWidget {
   const MovieScreen({super.key});
+
+  @override
+  State<MovieScreen> createState() => _MovieScreenState();
+}
+
+class _MovieScreenState extends State<MovieScreen> {
+  final AppColors appColors = AppColors();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +47,7 @@ class MovieScreen extends StatelessWidget {
                         BlocProvider.of<AppCubit>(context).backToPreviousMovie();
                       },
                       icon: const Icon(Icons.arrow_back))),
-              backgroundColor: AppColors.mainColor,
+              backgroundColor: appColors.mainColor,
               body: ListView(
                 children: [
                   Stack(

@@ -16,8 +16,15 @@ import 'dart:ui' as ui;
 
 import 'package:mediafy/models/tvshow_model.dart';
 
-class TvShowScreen extends StatelessWidget {
+class TvShowScreen extends StatefulWidget {
   const TvShowScreen({super.key});
+
+  @override
+  State<TvShowScreen> createState() => _TvShowScreenState();
+}
+
+class _TvShowScreenState extends State<TvShowScreen> {
+  final AppColors appColors = AppColors();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +48,7 @@ class TvShowScreen extends StatelessWidget {
                         BlocProvider.of<AppCubit>(context).backToPreviousTvShow();
                       },
                       icon: const Icon(Icons.arrow_back))),
-              backgroundColor: AppColors.mainColor,
+              backgroundColor: appColors.mainColor,
               body: ListView(
                 children: [
                   Stack(

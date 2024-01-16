@@ -1,23 +1,43 @@
 import 'package:bloc/bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/models/cast_model.dart';
 import 'package:mediafy/models/crew_model.dart';
 import 'package:mediafy/models/keywords_model.dart';
 import 'package:mediafy/models/movie_model.dart';
 import 'package:mediafy/models/tvshow_model.dart';
+import 'package:mediafy/pages/search_page.dart';
 import 'package:mediafy/services/media_services.dart';
 
 class AppCubit extends Cubit<CubitStates> {
   AppCubit({required this.media}) : super(InitialState()) {
-    emit(WelcomeState());
+    _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  final Connectivity _connectivity = Connectivity();
+
+  void _updateConnectionStatus(ConnectivityResult connectivityResult) {
+    if (connectivityResult == ConnectivityResult.none) {
+      print("Here!");
+      emit(InternetErrorState());
+    } else {
+      print("Here 2");
+      if (lastCubitState != null) {
+        emit(lastCubitState!);
+      } else {
+        emit(WelcomeState());
+      }
+    }
   }
 
   MediaServices media;
-
   MoviesState finalMoviesState = MoviesState(topRatedMovies: const [], trendingMovies: const [], upcomingMovies: const [], hasData: false);
+
+  CubitStates? lastCubitState;
 
   void goToMoviesPage() {
     if (finalMoviesState.hasData) {
+      lastCubitState = finalMoviesState;
       emit(finalMoviesState);
       return;
     }
@@ -33,10 +53,12 @@ class AppCubit extends Cubit<CubitStates> {
       finalMoviesState.trendingMovies = value[1];
       finalMoviesState.upcomingMovies = value[2];
       finalMoviesState.hasData = true;
+
+      lastCubitState = finalMoviesState;
     }).catchError((e) {
       print(e);
 
-      emit(ErrorState(error: e));
+      emit(InternetErrorState());
     });
   }
 
@@ -44,6 +66,7 @@ class AppCubit extends Cubit<CubitStates> {
 
   void goToTvSeriesPage() {
     if (finalTvShowsState.hasData) {
+      lastCubitState = finalTvShowsState;
       emit(finalTvShowsState);
       return;
     }
@@ -58,8 +81,10 @@ class AppCubit extends Cubit<CubitStates> {
       finalTvShowsState.trendingTvShows = value[0];
       finalTvShowsState.topRatedTvShows = value[1];
       finalTvShowsState.hasData = true;
+
+      lastCubitState = finalTvShowsState;
     }).catchError((e) {
-      emit(ErrorState(error: e));
+      emit(InternetErrorState());
     });
   }
 
@@ -92,11 +117,12 @@ class AppCubit extends Cubit<CubitStates> {
 
       moviesInCache.add(movieState);
 
+      lastCubitState = movieState;
       emit(movieState);
     } catch (e) {
       print(e);
 
-      emit(ErrorState(error: e));
+      emit(InternetErrorState());
     }
   }
 
@@ -113,6 +139,7 @@ class AppCubit extends Cubit<CubitStates> {
       }
       return;
     } else {
+      lastCubitState = moviesInCache.last;
       emit(moviesInCache.last);
     }
   }
@@ -146,11 +173,12 @@ class AppCubit extends Cubit<CubitStates> {
 
       tvShowsInCache.add(tvShowState);
 
+      lastCubitState = tvShowState;
       emit(tvShowState);
     } catch (e) {
       print(e);
 
-      emit(ErrorState(error: e));
+      emit(InternetErrorState());
     }
   }
 
@@ -167,6 +195,7 @@ class AppCubit extends Cubit<CubitStates> {
       }
       return;
     } else {
+      lastCubitState = tvShowsInCache.last;
       emit(tvShowsInCache.last);
     }
   }
@@ -174,7 +203,9 @@ class AppCubit extends Cubit<CubitStates> {
   SearchPageState finalSearchPageState = SearchPageState(query: "", movies: const [], tvShows: const [], mediaType: "movie", hasData: false);
 
   void goToSearchPage() {
-    emit(SearchPageState(query: finalSearchPageState.query, movies: finalSearchPageState.movies, tvShows: finalSearchPageState.tvShows, mediaType: finalSearchPageState.mediaType, hasData: finalSearchPageState.hasData));
+    SearchPageState searchPageState = SearchPageState(query: finalSearchPageState.query, movies: finalSearchPageState.movies, tvShows: finalSearchPageState.tvShows, mediaType: finalSearchPageState.mediaType, hasData: finalSearchPageState.hasData);
+    lastCubitState = searchPageState;
+    emit(searchPageState);
   }
 
   searchQuery(String mediaType, String query) async {
@@ -203,10 +234,11 @@ class AppCubit extends Cubit<CubitStates> {
         finalSearchPageState.movies = [];
       }
 
-      emit(SearchPageState(query: finalSearchPageState.query, movies: finalSearchPageState.movies, tvShows: finalSearchPageState.tvShows, mediaType: finalSearchPageState.mediaType, hasData: finalSearchPageState.hasData));
+      SearchPageState searchPageState = SearchPageState(query: finalSearchPageState.query, movies: finalSearchPageState.movies, tvShows: finalSearchPageState.tvShows, mediaType: finalSearchPageState.mediaType, hasData: finalSearchPageState.hasData);
+      emit(searchPageState);
     } catch (e) {
       print(e);
-      emit(ErrorState(error: e));
+      emit(InternetErrorState());
     }
   }
 }

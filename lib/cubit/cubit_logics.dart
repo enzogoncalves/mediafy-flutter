@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
+import 'package:mediafy/screens/error_screen.dart';
 import 'package:mediafy/screens/home_screen.dart';
 import 'package:mediafy/screens/movie_screen.dart';
 import 'package:mediafy/screens/tvShow_screen.dart';
@@ -41,8 +42,8 @@ class _CubitLogicsState extends State<CubitLogics> {
           return const TvShowScreen();
         } else if (state is LoadingTvShow) {
           return const TvShowScreen();
-        } else if (state is ErrorState) {
-          return Text(state.error.toString());
+        } else if (state is InternetErrorState) {
+          return ErrorScreen();
         } else {
           return const Placeholder();
         }

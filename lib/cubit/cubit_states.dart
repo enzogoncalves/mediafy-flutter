@@ -93,10 +93,9 @@ class SearchPageState extends CubitStates {
   List<Object> get props => [query, movies, tvShows, mediaType, hasData];
 }
 
-class ErrorState extends CubitStates {
-  ErrorState({this.error});
+class InternetErrorState extends CubitStates {
+  InternetErrorState();
 
-  dynamic error;
   @override
   List<Object> get props => [];
 }

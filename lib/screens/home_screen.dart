@@ -18,11 +18,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Widget> pages = const [TvShowsPage(), MoviesPage(), SearchPage()];
 
+  AppColors appColors = AppColors();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor: AppColors.mainColor,
+          backgroundColor: appColors.mainColor,
           bottomNavigationBar: BottomNavigationBar(
             onTap: (index) {
               if (index == widget.page) return;
@@ -36,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
             type: BottomNavigationBarType.fixed,
-            backgroundColor: AppColors.mainColor,
+            backgroundColor: appColors.mainColor,
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.grey.withOpacity(0.5),
             iconSize: 32,
