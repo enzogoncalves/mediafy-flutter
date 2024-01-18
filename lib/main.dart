@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mediafy/cubit/cubit_logics.dart';
 import 'package:mediafy/cubit/cubits.dart';
-import 'package:mediafy/services/media_services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: BlocProvider(
-          create: (context) => AppCubit(media: MediaServices()),
+          create: (context) => AppCubit(tmdb_api: TmdbApi()),
           child: const CubitLogics(),
         ));
   }

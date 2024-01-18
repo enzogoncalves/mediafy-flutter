@@ -1,16 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 import 'package:http/http.dart' as http;
-import 'package:mediafy/models/cast_model.dart';
-import 'package:mediafy/models/crew_model.dart';
-import 'package:mediafy/models/keywords_model.dart';
-import 'package:mediafy/models/movie_model.dart';
-import 'package:mediafy/models/tvshow_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 String? apiKey = dotenv.env["TMDB_API_KEY"];
 
-class MediaServices {
+class TmdbApi {
   Future<List<Movie>> getTopRatedMovies() async {
     final url = Uri.parse("https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
     final res = await http.get(url);

@@ -1,16 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
-import 'package:mediafy/models/cast_model.dart';
-import 'package:mediafy/models/crew_model.dart';
-import 'package:mediafy/models/keywords_model.dart';
-import 'package:mediafy/models/movie_model.dart';
-import 'package:mediafy/models/tvshow_model.dart';
-import 'package:mediafy/pages/search_page.dart';
-import 'package:mediafy/services/media_services.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 
 class AppCubit extends Cubit<CubitStates> {
-  AppCubit({required this.media}) : super(InitialState()) {
+  AppCubit({required this.tmdb_api}) : super(InitialState()) {
     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
@@ -30,12 +24,18 @@ class AppCubit extends Cubit<CubitStates> {
     }
   }
 
-  MediaServices media;
+  TmdbApi tmdb_api;
   MoviesState finalMoviesState = MoviesState(topRatedMovies: const [], trendingMovies: const [], upcomingMovies: const [], hasData: false);
 
   CubitStates? lastCubitState;
 
-  void goToMoviesPage() {
+  Future<void> goToMoviesPage() async {
+    if (state is MoviesState) {
+      print("a");
+      await getAllMovieData();
+
+      return;
+    }
     if (finalMoviesState.hasData) {
       lastCubitState = finalMoviesState;
       emit(finalMoviesState);
@@ -44,10 +44,15 @@ class AppCubit extends Cubit<CubitStates> {
 
     emit(finalMoviesState);
 
-    Future.wait([media.getTopRatedMovies(), media.getTrendingMovies(), media.getUpcomingMovies()]).then((value) {
-      MoviesState movieState = MoviesState(topRatedMovies: value[0], trendingMovies: value[1], upcomingMovies: value[2], hasData: true);
+    await getAllMovieData();
+  }
 
-      emit(movieState);
+  Future<void> getAllMovieData() async {
+    print("b");
+    Future.wait([tmdb_api.getTopRatedMovies(), tmdb_api.getTrendingMovies(), tmdb_api.getUpcomingMovies()]).then((value) {
+      MoviesState moviesState = MoviesState(topRatedMovies: value[0], trendingMovies: value[1], upcomingMovies: value[2], hasData: true);
+
+      emit(moviesState);
 
       finalMoviesState.topRatedMovies = value[0];
       finalMoviesState.trendingMovies = value[1];
@@ -73,7 +78,7 @@ class AppCubit extends Cubit<CubitStates> {
 
     emit(finalTvShowsState);
 
-    Future.wait([media.getTrendingTvShows(), media.getTopRatedTvShows()]).then((value) {
+    Future.wait([tmdb_api.getTrendingTvShows(), tmdb_api.getTopRatedTvShows()]).then((value) {
       TvShowsState tvShowsState = TvShowsState(trendingTvShows: value[0], topRatedTvShows: value[1], hasData: true);
 
       emit(tvShowsState);
@@ -102,7 +107,7 @@ class AppCubit extends Cubit<CubitStates> {
     emit(LoadingMovie());
 
     try {
-      List movieData = await Future.wait([media.getMovieDetails(movieId), media.getMovieCredits(movieId), media.getMovieKeywords(movieId), media.getMovieRecommendations(movieId)]);
+      List movieData = await Future.wait([tmdb_api.getMovieDetails(movieId), tmdb_api.getMovieCredits(movieId), tmdb_api.getMovieKeywords(movieId), tmdb_api.getMovieRecommendations(movieId)]);
 
       MovieDetails details = movieData[0] as MovieDetails;
       Map<String, dynamic> credits = movieData[1] as Map<String, dynamic>;
@@ -158,7 +163,7 @@ class AppCubit extends Cubit<CubitStates> {
     emit(LoadingTvShow());
 
     try {
-      List tvShowData = await Future.wait([media.getTvShowDetails(tvShowId), media.getTvShowCredits(tvShowId), media.getTvShowKeywords(tvShowId), media.getTvShowRecommendations(tvShowId)]);
+      List tvShowData = await Future.wait([tmdb_api.getTvShowDetails(tvShowId), tmdb_api.getTvShowCredits(tvShowId), tmdb_api.getTvShowKeywords(tvShowId), tmdb_api.getTvShowRecommendations(tvShowId)]);
 
       TvShowDetails details = tvShowData[0] as TvShowDetails;
       Map<String, dynamic> credits = tvShowData[1] as Map<String, dynamic>;
@@ -209,7 +214,7 @@ class AppCubit extends Cubit<CubitStates> {
   }
 
   searchQuery(String mediaType, String query) async {
-    // verify if the user has already searched the same query with the same media type (movie or tv show) and return the same result (does nothing)
+    // verify if the user has already searched the same query with the same tmdb_api type (movie or tv show) and return the same result (does nothing)
     if (query == finalSearchPageState.query) {
       if (mediaType == "movie" && finalSearchPageState.movies.isNotEmpty) {
         return;
@@ -219,7 +224,7 @@ class AppCubit extends Cubit<CubitStates> {
     }
 
     try {
-      List result = await media.search(mediaType, query);
+      List result = await tmdb_api.search(mediaType, query);
 
       finalSearchPageState.query = query;
       finalSearchPageState.hasData = true;

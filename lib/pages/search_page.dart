@@ -4,8 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mediafy/components/Poster.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
-import 'package:mediafy/models/movie_model.dart';
-import 'package:mediafy/models/tvshow_model.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});

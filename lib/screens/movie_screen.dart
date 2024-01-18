@@ -9,11 +9,7 @@ import 'package:mediafy/components/title_large.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
 import 'package:mediafy/misc/colors.dart';
-import 'package:mediafy/models/cast_model.dart';
-import 'package:mediafy/models/crew_model.dart';
-import 'package:mediafy/models/keywords_model.dart';
-import 'package:mediafy/models/media_functions_model.dart';
-import 'package:mediafy/models/movie_model.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 import 'dart:ui' as ui;
 
 class MovieScreen extends StatefulWidget {

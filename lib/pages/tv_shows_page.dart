@@ -4,7 +4,7 @@ import 'package:mediafy/components/LoadingMoviesTvShows.dart';
 import 'package:mediafy/components/Poster.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
-import 'package:mediafy/models/tvshow_model.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 
 class TvShowsPage extends StatelessWidget {
   const TvShowsPage({super.key});

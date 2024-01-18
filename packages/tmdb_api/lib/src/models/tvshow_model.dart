@@ -1,5 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
-import 'package:mediafy/models/movie_model.dart';
+import 'movie_model.dart';
 
 class TvShow {
   TvShow({required this.tvShow}) {

@@ -1,13 +1,10 @@
-import 'package:mediafy/models/movie_model.dart';
+import 'movie_model.dart';
 
 class MediaFunctions {
   Map<String, dynamic> formatDate(String releaseDate) {
     Map<String, dynamic> dateData;
     if (releaseDate.length == 10) {
-      dateData = {
-        "year": releaseDate.split('-')[0],
-        "date": '${releaseDate.split('-')[1]}/${releaseDate.split('-')[2]}/${releaseDate.split('-')[0]}'
-      };
+      dateData = {"year": releaseDate.split('-')[0], "date": '${releaseDate.split('-')[1]}/${releaseDate.split('-')[2]}/${releaseDate.split('-')[0]}'};
     } else {
       List date = releaseDate.substring(0, releaseDate.indexOf('T')).split('-');
       int day = date[2];
@@ -29,9 +26,7 @@ class MediaFunctions {
 
       String month = months[date[1] - 1];
 
-      dateData = {
-        "date": '$month $day, $year'
-      };
+      dateData = {"date": '$month $day, $year'};
     }
 
     return dateData;
@@ -51,7 +46,7 @@ class MediaFunctions {
   }
 
   String transformReleaseDate(releaseDate) {
-    List<String> date =releaseDate.split('-'); 
+    List<String> date = releaseDate.split('-');
     int day = int.parse(date[2]);
     dynamic month = int.parse(date[1]);
     int year = int.parse(date[0]);

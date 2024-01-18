@@ -43,7 +43,7 @@ class _CubitLogicsState extends State<CubitLogics> {
         } else if (state is LoadingTvShow) {
           return const TvShowScreen();
         } else if (state is InternetErrorState) {
-          return ErrorScreen();
+          return const ErrorScreen();
         } else {
           return const Placeholder();
         }

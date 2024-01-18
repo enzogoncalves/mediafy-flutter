@@ -1,9 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:mediafy/models/cast_model.dart';
-import 'package:mediafy/models/crew_model.dart';
-import 'package:mediafy/models/keywords_model.dart';
-import 'package:mediafy/models/movie_model.dart';
-import 'package:mediafy/models/tvshow_model.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 
 abstract class CubitStates extends Equatable {}
 
