@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mediafy/components/noMediaPosterPath.dart';
 
 class Poster extends StatelessWidget {
-  Poster({
+  const Poster({
     super.key,
     required this.posterPath,
     required this.height,
@@ -10,7 +10,7 @@ class Poster extends StatelessWidget {
   });
 
   final double height;
-  double? width;
+  final double? width;
   final String? posterPath;
 
   @override

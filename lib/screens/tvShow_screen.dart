@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:mediafy/components/LoadingMedia.dart';
-import 'package:mediafy/components/Poster.dart';
+import 'package:mediafy/components/loadingMedia.dart';
+import 'package:mediafy/components/poster.dart';
 import 'package:mediafy/components/mediaDetails.dart';
 import 'package:mediafy/components/noCastProfilePath.dart';
 import 'package:mediafy/components/title_large.dart';

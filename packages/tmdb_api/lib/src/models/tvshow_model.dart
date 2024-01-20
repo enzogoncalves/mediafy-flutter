@@ -32,7 +32,6 @@ class TvShowDetails extends TvShow {
     episode_run_time = tvShow["episode_run_time"];
     tagline = tvShow["tagline"];
     List a = tvShow["genres"];
-    first_air_date = tvShow["first_air_date"];
     number_of_episodes = tvShow["number_of_episodes"];
     number_of_seasons = tvShow["number_of_seasons"];
 
@@ -52,7 +51,6 @@ class TvShowDetails extends TvShow {
   List<Genre>? genres;
   List<dynamic>? production_companies;
   String? status;
-  String? first_air_date;
   int? number_of_episodes;
   int? number_of_seasons;
 }

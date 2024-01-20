@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mediafy/components/LoadingMoviesTvShows.dart';
-import 'package:mediafy/components/Poster.dart';
+import 'package:mediafy/components/loadingMoviesTvShows.dart';
+import 'package:mediafy/components/poster.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
 import 'package:mediafy/cubit/cubits.dart';
 import 'package:tmdb_api/tmdb_api.dart';
