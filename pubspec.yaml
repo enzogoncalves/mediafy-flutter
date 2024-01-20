@@ -45,6 +45,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   tmdb_api:
     path: packages/tmdb_api
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

@@ -43,7 +43,7 @@ class WelcomeScreen extends StatelessWidget {
                 width: 200,
                 child: ElevatedButton(
                   onPressed: () {
-                    BlocProvider.of<AppCubit>(context).goToMoviesPage();
+                    BlocProvider.of<AppCubit>(context).changeFirstInitialization();
                   },
                   style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 18), foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 33, 122, 196)),
                   child: const Text(

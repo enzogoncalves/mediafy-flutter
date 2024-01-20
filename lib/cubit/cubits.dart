@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
+import 'package:mediafy/screens/welcome_screen.dart';
 import 'package:tmdb_api/tmdb_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppCubit extends Cubit<CubitStates> {
   AppCubit({required this.tmdbApi}) : super(InitialState()) {
@@ -9,19 +11,39 @@ class AppCubit extends Cubit<CubitStates> {
   }
 
   final Connectivity _connectivity = Connectivity();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  void _updateConnectionStatus(ConnectivityResult connectivityResult) {
+  Future<void> _updateConnectionStatus(ConnectivityResult connectivityResult) async {
     if (connectivityResult == ConnectivityResult.none) {
       emit(InternetErrorState());
     } else {
       if (lastCubitState != null) {
         emit(lastCubitState!);
       } else {
-        emit(WelcomeState());
+        final SharedPreferences prefs = await _prefs;
+        bool? prefsFirstInitialization = prefs.getBool(prefsFirstInitializationKey);
+
+        if (prefsFirstInitialization != null) {
+          if (prefsFirstInitialization) {
+            emit(WelcomeState());
+          } else {
+            await goToMoviesPage();
+          }
+        } else {
+          emit(WelcomeState());
+        }
       }
     }
   }
 
+  Future<void> changeFirstInitialization() async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setBool(prefsFirstInitializationKey, false);
+
+    await goToMoviesPage();
+  }
+
+  String prefsFirstInitializationKey = "firstInitialization";
   TmdbApi tmdbApi;
   MoviesState finalMoviesState = MoviesState(topRatedMovies: const [], trendingMovies: const [], upcomingMovies: const [], hasData: false);
 
