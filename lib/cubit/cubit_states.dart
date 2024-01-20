@@ -89,9 +89,17 @@ class SearchPageState extends CubitStates {
   List<Object> get props => [query, movies, tvShows, mediaType, hasData];
 }
 
-class InternetErrorState extends CubitStates {
-  InternetErrorState();
+// Error States
+class ServerErrorState extends CubitStates {
+  ServerErrorState({required this.tmdbError});
 
+  final TmdbError tmdbError;
+
+  @override
+  List<Object> get props => [];
+}
+
+class InternetErrorState extends CubitStates {
   @override
   List<Object> get props => [];
 }

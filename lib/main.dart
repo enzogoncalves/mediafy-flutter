@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: BlocProvider(
-          create: (context) => AppCubit(tmdb_api: TmdbApi()),
+          create: (context) => AppCubit(tmdbApi: TmdbApi()),
           child: const CubitLogics(),
         ));
   }

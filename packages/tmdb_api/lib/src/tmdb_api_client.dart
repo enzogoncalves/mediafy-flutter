@@ -23,7 +23,7 @@ class TmdbApi {
         return [];
       }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -43,7 +43,7 @@ class TmdbApi {
         return [];
       }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -65,7 +65,7 @@ class TmdbApi {
         return [];
       }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -79,7 +79,7 @@ class TmdbApi {
 
       return movieDetails;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -96,7 +96,7 @@ class TmdbApi {
 
       return keywords;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -113,7 +113,7 @@ class TmdbApi {
 
       return movieRecommendations;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -167,7 +167,7 @@ class TmdbApi {
 
       return formatedCredit;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -187,7 +187,7 @@ class TmdbApi {
         return [];
       }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -207,7 +207,7 @@ class TmdbApi {
         return [];
       }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -221,7 +221,7 @@ class TmdbApi {
 
       return tvShowsDetails;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -238,7 +238,7 @@ class TmdbApi {
 
       return keywords;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -255,7 +255,7 @@ class TmdbApi {
 
       return movieRecommendations;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -309,7 +309,7 @@ class TmdbApi {
 
       return formatedCredit;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 
@@ -330,7 +330,7 @@ class TmdbApi {
         return tvShows;
       }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(res.body);
     }
   }
 }

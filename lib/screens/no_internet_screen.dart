@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mediafy/misc/colors.dart';
 
-class ErrorScreen extends StatelessWidget {
-  const ErrorScreen({super.key});
+class NoInternetScreen extends StatelessWidget {
+  const NoInternetScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
