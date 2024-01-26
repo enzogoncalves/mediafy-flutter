@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _onInit() async {
     _appCubit = Modular.get<AppCubit>();
     isFirstInitialization = await _appCubit.isFirstInitialization();
-    await Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(seconds: 1));
     if (isFirstInitialization) {
       Modular.to.pushReplacementNamed(PagesName.welcome);
     } else {

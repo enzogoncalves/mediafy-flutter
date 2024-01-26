@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mediafy/cubit/cubits.dart';
+import 'package:mediafy/misc/colors.dart';
 import 'package:mediafy/router/pages_name.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.mainColor,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +39,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               const Text(
                 "Welcome to Mediafy!",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500, color: Colors.white),
               ),
               const SizedBox(
                 height: 10,
@@ -46,7 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 width: 300,
                 child: Text(
                   "You can use it to search any movie or tv show and see all the relevant informations about,",
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
+                  style: TextStyle(fontSize: 16, color: Colors.white70),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -60,7 +62,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     _appCubit.changeFirstInitialization();
                     Modular.to.pushReplacementNamed(PagesName.movies);
                   },
-                  style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 18), foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 33, 122, 196)),
+                  style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 18), foregroundColor: Colors.black, backgroundColor: Colors.white),
                   child: const Text(
                     "Begin",
                   ),
