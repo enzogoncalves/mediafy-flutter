@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mediafy/components/noMediaPosterPath.dart';
+import 'package:mediafy/shared/widgets/noMediaPosterPath.dart';
 
 class Poster extends StatelessWidget {
   const Poster({

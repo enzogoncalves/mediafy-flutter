@@ -1,38 +1,39 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mediafy/cubit/cubit_states.dart';
-import 'package:mediafy/screens/welcome_screen.dart';
-import 'package:tmdb_api/tmdb_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 
 class AppCubit extends Cubit<CubitStates> {
-  AppCubit({required this.tmdbApi}) : super(InitialState()) {
+  factory AppCubit() => Modular.get<AppCubit>();
+
+  AppCubit._() : super(InitialState()) {
     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
+  static final AppCubit instance = AppCubit._();
+
   final Connectivity _connectivity = Connectivity();
+
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  Future<bool> isFirstInitialization() async {
+    final SharedPreferences prefs = await _prefs;
+    bool? prefsFirstInitialization = prefs.getBool(prefsFirstInitializationKey);
+
+    if (prefsFirstInitialization != null) {
+      return prefsFirstInitialization;
+    } else {
+      return true;
+    }
+  }
 
   Future<void> _updateConnectionStatus(ConnectivityResult connectivityResult) async {
     if (connectivityResult == ConnectivityResult.none) {
       emit(InternetErrorState());
-    } else {
-      if (lastCubitState != null) {
-        emit(lastCubitState!);
-      } else {
-        final SharedPreferences prefs = await _prefs;
-        bool? prefsFirstInitialization = prefs.getBool(prefsFirstInitializationKey);
-
-        if (prefsFirstInitialization != null) {
-          if (prefsFirstInitialization) {
-            emit(WelcomeState());
-          } else {
-            await goToMoviesPage();
-          }
-        } else {
-          emit(WelcomeState());
-        }
-      }
     }
   }
 
@@ -44,12 +45,20 @@ class AppCubit extends Cubit<CubitStates> {
   }
 
   String prefsFirstInitializationKey = "firstInitialization";
-  TmdbApi tmdbApi;
+  TmdbApi tmdbApi = TmdbApi();
   MoviesState finalMoviesState = MoviesState(topRatedMovies: const [], trendingMovies: const [], upcomingMovies: const [], hasData: false);
 
   CubitStates? lastCubitState;
 
-  Future<void> goToMoviesPage() async {
+  Future<void> goToMoviesPage({bool refresh = false}) async {
+    if (refresh) {
+      finalMoviesState.hasData = false;
+      emit(finalMoviesState);
+
+      await getAllMoviesData();
+      return;
+    }
+
     if (state is MoviesState) {
       await getAllMoviesData();
 
@@ -79,6 +88,10 @@ class AppCubit extends Cubit<CubitStates> {
 
       lastCubitState = finalMoviesState;
     }).catchError((e) {
+      if (e is SocketException) {
+        emit(InternetErrorState());
+        return;
+      }
       TmdbError tmdbError = TmdbError(response: e.toString());
       verifyErrorCode(tmdbError);
     });
@@ -86,7 +99,14 @@ class AppCubit extends Cubit<CubitStates> {
 
   TvShowsState finalTvShowsState = TvShowsState(trendingTvShows: const [], topRatedTvShows: const [], hasData: false);
 
-  void goToTvSeriesPage() {
+  Future<void> goToTvSeriesPage({bool refresh = false}) async {
+    if (refresh) {
+      finalTvShowsState.hasData = false;
+      emit(finalTvShowsState);
+
+      await getAllTvShowsData();
+      return;
+    }
     if (finalTvShowsState.hasData) {
       lastCubitState = finalTvShowsState;
       emit(finalTvShowsState);
@@ -95,6 +115,10 @@ class AppCubit extends Cubit<CubitStates> {
 
     emit(finalTvShowsState);
 
+    await getAllTvShowsData();
+  }
+
+  Future<void> getAllTvShowsData() async {
     Future.wait([tmdbApi.getTrendingTvShows(), tmdbApi.getTopRatedTvShows()]).then((value) {
       TvShowsState tvShowsState = TvShowsState(trendingTvShows: value[0], topRatedTvShows: value[1], hasData: true);
 
@@ -106,6 +130,10 @@ class AppCubit extends Cubit<CubitStates> {
 
       lastCubitState = finalTvShowsState;
     }).catchError((e) {
+      if (e is SocketException) {
+        emit(InternetErrorState());
+        return;
+      }
       TmdbError tmdbError = TmdbError(response: e.toString());
       verifyErrorCode(tmdbError);
     });
@@ -143,12 +171,16 @@ class AppCubit extends Cubit<CubitStates> {
       lastCubitState = movieState;
       emit(movieState);
     } catch (e) {
+      if (e is SocketException) {
+        emit(InternetErrorState());
+        return;
+      }
       TmdbError tmdbError = TmdbError(response: e.toString());
       verifyErrorCode(tmdbError);
     }
   }
 
-  void backToPreviousMovie() {
+  void popToPreviousMovie() {
     String moviePrimitiveState = moviesInCache[moviesInCache.length - 1].primitiveState;
 
     moviesInCache.removeLast();
@@ -198,12 +230,16 @@ class AppCubit extends Cubit<CubitStates> {
       lastCubitState = tvShowState;
       emit(tvShowState);
     } catch (e) {
+      if (e is SocketException) {
+        emit(InternetErrorState());
+        return;
+      }
       TmdbError tmdbError = TmdbError(response: e.toString());
       verifyErrorCode(tmdbError);
     }
   }
 
-  void backToPreviousTvShow() {
+  void popToPreviousTvShow() {
     String tvShowPrimitiveState = tvShowsInCache[tvShowsInCache.length - 1].primitiveState;
 
     tvShowsInCache.removeLast();
@@ -223,7 +259,7 @@ class AppCubit extends Cubit<CubitStates> {
 
   SearchPageState finalSearchPageState = SearchPageState(query: "", movies: const [], tvShows: const [], mediaType: "movie", hasData: false);
 
-  void goToSearchPage() {
+  Future<void> goToSearchPage() async {
     SearchPageState searchPageState = SearchPageState(query: finalSearchPageState.query, movies: finalSearchPageState.movies, tvShows: finalSearchPageState.tvShows, mediaType: finalSearchPageState.mediaType, hasData: finalSearchPageState.hasData);
     lastCubitState = searchPageState;
     emit(searchPageState);
@@ -258,6 +294,10 @@ class AppCubit extends Cubit<CubitStates> {
       SearchPageState searchPageState = SearchPageState(query: finalSearchPageState.query, movies: finalSearchPageState.movies, tvShows: finalSearchPageState.tvShows, mediaType: finalSearchPageState.mediaType, hasData: finalSearchPageState.hasData);
       emit(searchPageState);
     } catch (e) {
+      if (e is SocketException) {
+        emit(InternetErrorState());
+        return;
+      }
       TmdbError tmdbError = TmdbError(response: e.toString());
       verifyErrorCode(tmdbError);
     }

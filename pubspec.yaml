@@ -46,6 +46,7 @@ dependencies:
   tmdb_api:
     path: packages/tmdb_api
   shared_preferences: ^2.2.2
+  flutter_modular: ^6.3.2
 
 dev_dependencies:
   flutter_test:

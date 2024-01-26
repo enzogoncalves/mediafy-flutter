@@ -8,12 +8,15 @@ class NoMediaPosterPath extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: height / 1.5,
-      height: height,
-      child: Center(
-        child: Icon(isMovie ? Icons.movie_creation_outlined : Icons.tv, color: Colors.grey[700], size: 102,),
-      )
-    );
+    return SizedBox(
+        width: height / 1.5,
+        height: height,
+        child: Center(
+          child: Icon(
+            isMovie ? Icons.movie_creation_outlined : Icons.tv,
+            color: Colors.grey[700],
+            size: 102,
+          ),
+        ));
   }
 }

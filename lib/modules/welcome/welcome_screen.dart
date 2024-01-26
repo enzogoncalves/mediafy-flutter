@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mediafy/cubit/cubits.dart';
+import 'package:mediafy/router/pages_name.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  late AppCubit _appCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _appCubit = Modular.get<AppCubit>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +57,8 @@ class WelcomeScreen extends StatelessWidget {
                 width: 200,
                 child: ElevatedButton(
                   onPressed: () {
-                    BlocProvider.of<AppCubit>(context).changeFirstInitialization();
+                    _appCubit.changeFirstInitialization();
+                    Modular.to.pushReplacementNamed(PagesName.movies);
                   },
                   style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 18), foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 33, 122, 196)),
                   child: const Text(

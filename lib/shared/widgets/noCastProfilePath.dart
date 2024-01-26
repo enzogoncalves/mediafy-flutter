@@ -7,12 +7,15 @@ class NoCastProfilePath extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: posterHeight / 1.5,
-      height: posterHeight,
-      child: Center(
-        child: Icon(Icons.person, color: Colors.grey[700], size: 102,),
-      )
-    );
+    return SizedBox(
+        width: posterHeight / 1.5,
+        height: posterHeight,
+        child: Center(
+          child: Icon(
+            Icons.person,
+            color: Colors.grey[700],
+            size: 102,
+          ),
+        ));
   }
 }

@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mediafy/cubit/cubits.dart';
 import 'package:mediafy/misc/colors.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 class ServerErrorScreen extends StatelessWidget {
-  const ServerErrorScreen(this.tmdbError, {super.key});
+  const ServerErrorScreen({super.key, required this.tmdbError, required this.parentFunction});
 
   final TmdbError tmdbError;
+  final Function() parentFunction;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors().mainColor,
+      backgroundColor: AppColors.mainColor,
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -43,7 +42,7 @@ class ServerErrorScreen extends StatelessWidget {
                         width: 200,
                         child: ElevatedButton(
                             onPressed: () async {
-                              await context.read<AppCubit>().goToMoviesPage();
+                              await parentFunction();
                             },
                             child: const Text(
                               "Try again",
@@ -56,7 +55,7 @@ class ServerErrorScreen extends StatelessWidget {
               ),
             ),
             Text(
-              'status code: ${tmdbError.status_code}',
+              'error status code: ${tmdbError.status_code}',
               style: const TextStyle(color: Colors.white),
             )
           ],
