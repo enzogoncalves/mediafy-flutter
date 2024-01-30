@@ -8,7 +8,7 @@ String? apiKey = dotenv.env["TMDB_API_KEY"];
 
 class TmdbApi {
   Future<List<Movie>> getTopRatedMovies() async {
-    final url = Uri.parse("https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
+    final url = Uri.parse("${HttpConstants.root}/movie/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -28,7 +28,7 @@ class TmdbApi {
   }
 
   Future<List<Movie>> getTrendingMovies() async {
-    final url = Uri.parse("https://api.themoviedb.org/3/trending/movie/day?api_key=$apiKey");
+    final url = Uri.parse("${HttpConstants.root}/trending/movie/day?api_key=$apiKey");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -48,7 +48,7 @@ class TmdbApi {
   }
 
   Future<List<Movie>> getUpcomingMovies() async {
-    final url = Uri.parse("https://api.themoviedb.org/3/discover/movie?api_key=$apiKey&include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2023-12-25&sort_by=popularity.desc");
+    final url = Uri.parse("${HttpConstants.root}/discover/movie?api_key=$apiKey&include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2023-12-25&sort_by=popularity.desc");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -70,7 +70,7 @@ class TmdbApi {
   }
 
   Future<MovieDetails> getMovieDetails(int movieId) async {
-    final url = Uri.parse("https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&language=en-US");
+    final url = Uri.parse("${HttpConstants.root}/movie/$movieId?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -84,7 +84,7 @@ class TmdbApi {
   }
 
   Future<List<Keyword>> getMovieKeywords(int movieId) async {
-    final url = Uri.parse("https://api.themoviedb.org/3/movie/$movieId/keywords?api_key=$apiKey");
+    final url = Uri.parse("${HttpConstants.root}/movie/$movieId/keywords?api_key=$apiKey");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -101,7 +101,7 @@ class TmdbApi {
   }
 
   Future<List<Movie>> getMovieRecommendations(int movieId) async {
-    final url = Uri.parse("https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=$apiKey&language=en-US&page=1");
+    final url = Uri.parse("${HttpConstants.root}/movie/$movieId/recommendations?api_key=$apiKey&language=en-US&page=1");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -118,7 +118,7 @@ class TmdbApi {
   }
 
   Future<Map<String, dynamic>> getMovieCredits(int movieId) async {
-    final url = Uri.parse("https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$apiKey&language=en-US");
+    final url = Uri.parse("${HttpConstants.root}/movie/$movieId/credits?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -172,7 +172,7 @@ class TmdbApi {
   }
 
   Future<List<TvShow>> getTopRatedTvShows() async {
-    final url = Uri.parse("https://api.themoviedb.org/3/tv/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
+    final url = Uri.parse("${HttpConstants.root}/tv/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -192,7 +192,7 @@ class TmdbApi {
   }
 
   Future<List<TvShow>> getTrendingTvShows() async {
-    final url = Uri.parse("https://api.themoviedb.org/3/trending/tv/day?api_key=$apiKey");
+    final url = Uri.parse("${HttpConstants.root}/trending/tv/day?api_key=$apiKey");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -212,7 +212,7 @@ class TmdbApi {
   }
 
   Future<TvShowDetails> getTvShowDetails(int tvShowId) async {
-    final url = Uri.parse("https://api.themoviedb.org/3/tv/$tvShowId?api_key=$apiKey&language=en-US");
+    final url = Uri.parse("${HttpConstants.root}/tv/$tvShowId?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -226,7 +226,7 @@ class TmdbApi {
   }
 
   Future<List<Keyword>> getTvShowKeywords(int tvShowId) async {
-    final url = Uri.parse("https://api.themoviedb.org/3/tv/$tvShowId/keywords?api_key=$apiKey");
+    final url = Uri.parse("${HttpConstants.root}/tv/$tvShowId/keywords?api_key=$apiKey");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -243,7 +243,7 @@ class TmdbApi {
   }
 
   Future<List<TvShow>> getTvShowRecommendations(int tvShowId) async {
-    final url = Uri.parse("https://api.themoviedb.org/3/tv/$tvShowId/recommendations?api_key=$apiKey&language=en-US&page=1");
+    final url = Uri.parse("${HttpConstants.root}/tv/$tvShowId/recommendations?api_key=$apiKey&language=en-US&page=1");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -260,7 +260,7 @@ class TmdbApi {
   }
 
   Future<Map<String, dynamic>> getTvShowCredits(int tvShowId) async {
-    final url = Uri.parse("https://api.themoviedb.org/3/tv/$tvShowId/credits?api_key=$apiKey&language=en-US");
+    final url = Uri.parse("${HttpConstants.root}/tv/$tvShowId/credits?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -314,7 +314,7 @@ class TmdbApi {
   }
 
   Future<List> search(String mediaType, String query) async {
-    final url = Uri.parse("https://api.themoviedb.org/3/search/$mediaType?api_key=$apiKey&language=en-US&query=$query&include_adult=false");
+    final url = Uri.parse("${HttpConstants.root}/search/$mediaType?api_key=$apiKey&language=en-US&query=$query&include_adult=false");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {

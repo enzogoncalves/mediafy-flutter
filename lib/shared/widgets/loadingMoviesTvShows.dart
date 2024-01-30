@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LoadingMoviesTvShows extends StatelessWidget {
-  const LoadingMoviesTvShows({
-    super.key,
-    required this.itemCount
-  });
+  const LoadingMoviesTvShows({super.key, required this.itemCount});
 
   final int itemCount;
 
@@ -15,21 +12,23 @@ class LoadingMoviesTvShows extends StatelessWidget {
       baseColor: Colors.grey[800]!,
       highlightColor: Colors.grey[500]!,
       child: Container(
-        padding: const EdgeInsets.all(16),
-        child: ListView.separated(
-          itemCount: itemCount,
-          separatorBuilder: (context, index) => const SizedBox(height: 16,),
-          itemBuilder: (context, index) {
-            return Container(
-              height: 180,
-              color: Colors.grey[700],
-              child: const Center(
-                child: CircularProgressIndicator(color: Colors.red,)
-              ),
-            );
-          },
-        )
-      ),
+          padding: const EdgeInsets.all(16),
+          child: ListView.separated(
+            itemCount: itemCount,
+            separatorBuilder: (context, index) => const SizedBox(
+              height: 25,
+            ),
+            itemBuilder: (context, index) {
+              return Container(
+                height: 220,
+                color: Colors.grey[700],
+                child: const Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.red,
+                )),
+              );
+            },
+          )),
     );
   }
 }

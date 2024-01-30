@@ -194,8 +194,9 @@ class _SearchPageState extends State<SearchPage> {
 Widget WarningImages(String image, String text) {
   return Expanded(
     child: ListView(
+      physics: const NeverScrollableScrollPhysics(),
       children: [
-        Container(margin: const EdgeInsets.only(top: 150, right: 40), child: SvgPicture.asset('assets/$image.svg', width: 200)),
+        Container(margin: const EdgeInsets.only(top: 100, right: 40), child: SvgPicture.asset('assets/$image.svg', width: 200)),
         const SizedBox(
           height: 20,
         ),
