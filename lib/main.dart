@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    (const AssetImage("assets/welcome-image.svg"), context);
     return MaterialApp.router(
       routerConfig: Modular.routerConfig,
       debugShowCheckedModeBanner: false,
