@@ -8,7 +8,8 @@ String? apiKey = dotenv.env["TMDB_API_KEY"];
 
 class TmdbApi {
   Future<List<Movie>> getTopRatedMovies() async {
-    final url = Uri.parse("${HttpConstants.root}/movie/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
+    final url = Uri.parse(
+        "${HttpConstants.root}/movie/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -16,7 +17,8 @@ class TmdbApi {
       if (data.containsKey('results')) {
         List moviesData = data["results"];
 
-        List<Movie> movies = (moviesData).map((item) => Movie(media: item)).toList();
+        List<Movie> movies =
+            (moviesData).map((item) => Movie(media: item)).toList();
 
         return movies;
       } else {
@@ -28,7 +30,8 @@ class TmdbApi {
   }
 
   Future<List<Movie>> getTrendingMovies() async {
-    final url = Uri.parse("${HttpConstants.root}/trending/movie/day?api_key=$apiKey");
+    final url =
+        Uri.parse("${HttpConstants.root}/trending/movie/day?api_key=$apiKey");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -36,7 +39,8 @@ class TmdbApi {
       if (data.containsKey('results')) {
         List moviesData = data["results"];
 
-        List<Movie> movies = (moviesData).map((item) => Movie(media: item)).toList();
+        List<Movie> movies =
+            (moviesData).map((item) => Movie(media: item)).toList();
 
         return movies;
       } else {
@@ -48,7 +52,8 @@ class TmdbApi {
   }
 
   Future<List<Movie>> getUpcomingMovies() async {
-    final url = Uri.parse("${HttpConstants.root}/discover/movie?api_key=$apiKey&include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2023-12-25&sort_by=popularity.desc");
+    final url = Uri.parse(
+        "${HttpConstants.root}/discover/movie?api_key=$apiKey&include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2023-12-25&sort_by=popularity.desc");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -56,7 +61,8 @@ class TmdbApi {
       if (data.containsKey('results')) {
         List moviesData = data["results"];
 
-        List<Movie> movies = (moviesData).map((item) => Movie(media: item)).toList();
+        List<Movie> movies =
+            (moviesData).map((item) => Movie(media: item)).toList();
 
         movies.map((e) => e.backdrop_path != null);
 
@@ -70,7 +76,8 @@ class TmdbApi {
   }
 
   Future<MovieDetails> getMovieDetails(int movieId) async {
-    final url = Uri.parse("${HttpConstants.root}/movie/$movieId?api_key=$apiKey&language=en-US");
+    final url = Uri.parse(
+        "${HttpConstants.root}/movie/$movieId?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -84,7 +91,8 @@ class TmdbApi {
   }
 
   Future<List<Keyword>> getMovieKeywords(int movieId) async {
-    final url = Uri.parse("${HttpConstants.root}/movie/$movieId/keywords?api_key=$apiKey");
+    final url = Uri.parse(
+        "${HttpConstants.root}/movie/$movieId/keywords?api_key=$apiKey");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -92,7 +100,8 @@ class TmdbApi {
 
       List keywordsList = data["keywords"];
 
-      List<Keyword> keywords = keywordsList.map((e) => Keyword(keyword: e)).toList();
+      List<Keyword> keywords =
+          keywordsList.map((e) => Keyword(keyword: e)).toList();
 
       return keywords;
     } else {
@@ -101,7 +110,8 @@ class TmdbApi {
   }
 
   Future<List<Movie>> getMovieRecommendations(int movieId) async {
-    final url = Uri.parse("${HttpConstants.root}/movie/$movieId/recommendations?api_key=$apiKey&language=en-US&page=1");
+    final url = Uri.parse(
+        "${HttpConstants.root}/movie/$movieId/recommendations?api_key=$apiKey&language=en-US&page=1");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -109,7 +119,8 @@ class TmdbApi {
 
       List movies = data["results"];
 
-      List<Movie> movieRecommendations = movies.map((e) => Movie(media: e)).toList();
+      List<Movie> movieRecommendations =
+          movies.map((e) => Movie(media: e)).toList();
 
       return movieRecommendations;
     } else {
@@ -118,7 +129,8 @@ class TmdbApi {
   }
 
   Future<Map<String, dynamic>> getMovieCredits(int movieId) async {
-    final url = Uri.parse("${HttpConstants.root}/movie/$movieId/credits?api_key=$apiKey&language=en-US");
+    final url = Uri.parse(
+        "${HttpConstants.root}/movie/$movieId/credits?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -129,7 +141,13 @@ class TmdbApi {
       if (data.containsKey("cast")) {
         List castData = data["cast"];
 
-        List<Cast> cast = castData.map((item) => Cast(character: item["character"], id: item["id"], name: item["name"], profile_path: item["profile_path"])).toList();
+        List<Cast> cast = castData
+            .map((item) => Cast(
+                character: item["character"],
+                id: item["id"],
+                name: item["name"],
+                profile_path: item["profile_path"]))
+            .toList();
         formatedCredit["cast"] = cast;
       }
 
@@ -139,7 +157,9 @@ class TmdbApi {
         for (var i = 0; i < crewData.length; i++) {
           int? crewIndex;
 
-          List elementsIndex = formatedCredit["crew"]!.where((element) => element["name"] == crewData[i]["name"]).toList();
+          List elementsIndex = formatedCredit["crew"]!
+              .where((element) => element["name"] == crewData[i]["name"])
+              .toList();
 
           bool found = !listEquals([], elementsIndex);
 
@@ -159,9 +179,12 @@ class TmdbApi {
           }
         }
       }
-      formatedCredit["crew"]!.sort((a, b) => b["jobs"].length - a["jobs"].length);
+      formatedCredit["crew"]!
+          .sort((a, b) => b["jobs"].length - a["jobs"].length);
 
-      List<Crew> crew = formatedCredit["crew"]!.map((item) => Crew(jobs: item["jobs"], name: item["name"])).toList();
+      List<Crew> crew = formatedCredit["crew"]!
+          .map((item) => Crew(jobs: item["jobs"], name: item["name"]))
+          .toList();
 
       formatedCredit["crew"] = crew;
 
@@ -172,7 +195,8 @@ class TmdbApi {
   }
 
   Future<List<TvShow>> getTopRatedTvShows() async {
-    final url = Uri.parse("${HttpConstants.root}/tv/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
+    final url = Uri.parse(
+        "${HttpConstants.root}/tv/top_rated?api_key=$apiKey&language=en-US&page=1&region=US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -180,7 +204,8 @@ class TmdbApi {
       if (data.containsKey('results')) {
         List tvShowsData = data["results"];
 
-        List<TvShow> tvShows = (tvShowsData).map((item) => TvShow(tvShow: item)).toList();
+        List<TvShow> tvShows =
+            (tvShowsData).map((item) => TvShow(tvShow: item)).toList();
 
         return tvShows;
       } else {
@@ -192,7 +217,8 @@ class TmdbApi {
   }
 
   Future<List<TvShow>> getTrendingTvShows() async {
-    final url = Uri.parse("${HttpConstants.root}/trending/tv/day?api_key=$apiKey");
+    final url =
+        Uri.parse("${HttpConstants.root}/trending/tv/day?api_key=$apiKey");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -200,7 +226,8 @@ class TmdbApi {
       if (data.containsKey('results')) {
         List tvShowsData = data["results"];
 
-        List<TvShow> tvShows = (tvShowsData).map((item) => TvShow(tvShow: item)).toList();
+        List<TvShow> tvShows =
+            (tvShowsData).map((item) => TvShow(tvShow: item)).toList();
 
         return tvShows;
       } else {
@@ -212,7 +239,8 @@ class TmdbApi {
   }
 
   Future<TvShowDetails> getTvShowDetails(int tvShowId) async {
-    final url = Uri.parse("${HttpConstants.root}/tv/$tvShowId?api_key=$apiKey&language=en-US");
+    final url = Uri.parse(
+        "${HttpConstants.root}/tv/$tvShowId?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -226,7 +254,8 @@ class TmdbApi {
   }
 
   Future<List<Keyword>> getTvShowKeywords(int tvShowId) async {
-    final url = Uri.parse("${HttpConstants.root}/tv/$tvShowId/keywords?api_key=$apiKey");
+    final url = Uri.parse(
+        "${HttpConstants.root}/tv/$tvShowId/keywords?api_key=$apiKey");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -234,7 +263,8 @@ class TmdbApi {
 
       List keywordsList = data["results"];
 
-      List<Keyword> keywords = keywordsList.map((e) => Keyword(keyword: e)).toList();
+      List<Keyword> keywords =
+          keywordsList.map((e) => Keyword(keyword: e)).toList();
 
       return keywords;
     } else {
@@ -243,7 +273,8 @@ class TmdbApi {
   }
 
   Future<List<TvShow>> getTvShowRecommendations(int tvShowId) async {
-    final url = Uri.parse("${HttpConstants.root}/tv/$tvShowId/recommendations?api_key=$apiKey&language=en-US&page=1");
+    final url = Uri.parse(
+        "${HttpConstants.root}/tv/$tvShowId/recommendations?api_key=$apiKey&language=en-US&page=1");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -251,7 +282,8 @@ class TmdbApi {
 
       List movies = data["results"];
 
-      List<TvShow> movieRecommendations = movies.map((e) => TvShow(tvShow: e)).toList();
+      List<TvShow> movieRecommendations =
+          movies.map((e) => TvShow(tvShow: e)).toList();
 
       return movieRecommendations;
     } else {
@@ -260,7 +292,8 @@ class TmdbApi {
   }
 
   Future<Map<String, dynamic>> getTvShowCredits(int tvShowId) async {
-    final url = Uri.parse("${HttpConstants.root}/tv/$tvShowId/credits?api_key=$apiKey&language=en-US");
+    final url = Uri.parse(
+        "${HttpConstants.root}/tv/$tvShowId/credits?api_key=$apiKey&language=en-US");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -271,7 +304,13 @@ class TmdbApi {
       if (data.containsKey("cast")) {
         List castData = data["cast"];
 
-        List<Cast> cast = castData.map((item) => Cast(character: item["character"], id: item["id"], name: item["name"], profile_path: item["profile_path"])).toList();
+        List<Cast> cast = castData
+            .map((item) => Cast(
+                character: item["character"],
+                id: item["id"],
+                name: item["name"],
+                profile_path: item["profile_path"]))
+            .toList();
         formatedCredit["cast"] = cast;
       }
 
@@ -281,7 +320,9 @@ class TmdbApi {
         for (var i = 0; i < crewData.length; i++) {
           int? crewIndex;
 
-          List elementsIndex = formatedCredit["crew"]!.where((element) => element["name"] == crewData[i]["name"]).toList();
+          List elementsIndex = formatedCredit["crew"]!
+              .where((element) => element["name"] == crewData[i]["name"])
+              .toList();
 
           bool found = !listEquals([], elementsIndex);
 
@@ -301,9 +342,12 @@ class TmdbApi {
           }
         }
       }
-      formatedCredit["crew"]!.sort((a, b) => b["jobs"].length - a["jobs"].length);
+      formatedCredit["crew"]!
+          .sort((a, b) => b["jobs"].length - a["jobs"].length);
 
-      List<Crew> crew = formatedCredit["crew"]!.map((item) => Crew(jobs: item["jobs"], name: item["name"])).toList();
+      List<Crew> crew = formatedCredit["crew"]!
+          .map((item) => Crew(jobs: item["jobs"], name: item["name"]))
+          .toList();
 
       formatedCredit["crew"] = crew;
 
@@ -314,7 +358,8 @@ class TmdbApi {
   }
 
   Future<List> search(String mediaType, String query) async {
-    final url = Uri.parse("${HttpConstants.root}/search/$mediaType?api_key=$apiKey&language=en-US&query=$query&include_adult=false");
+    final url = Uri.parse(
+        "${HttpConstants.root}/search/$mediaType?api_key=$apiKey&language=en-US&query=$query&include_adult=false");
     final res = await http.get(url);
 
     if (res.statusCode == 200) {
@@ -326,7 +371,8 @@ class TmdbApi {
         List<Movie> movies = searchResults.map((e) => Movie(media: e)).toList();
         return movies;
       } else {
-        List<TvShow> tvShows = searchResults.map((e) => TvShow(tvShow: e)).toList();
+        List<TvShow> tvShows =
+            searchResults.map((e) => TvShow(tvShow: e)).toList();
         return tvShows;
       }
     } else {
