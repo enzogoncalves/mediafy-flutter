@@ -53,6 +53,7 @@ class AppCubit extends Cubit<CubitStates> {
   Future<void> goToMoviesPage({bool refresh = false}) async {
     if (refresh) {
       finalMoviesState.hasData = false;
+
       emit(finalMoviesState);
 
       await getAllMoviesData();

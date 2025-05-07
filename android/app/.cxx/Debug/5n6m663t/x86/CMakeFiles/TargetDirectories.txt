@@ -1,0 +1,2 @@
+C:/Users/enzom/Documents/mediafy/android/app/.cxx/Debug/5n6m663t/x86/CMakeFiles/edit_cache.dir
+C:/Users/enzom/Documents/mediafy/android/app/.cxx/Debug/5n6m663t/x86/CMakeFiles/rebuild_cache.dir

@@ -1,3 +1,3 @@
 class HttpConstants {
-  static String root = "https://api.themoviedb.org/3/";
+  static String root = "https://api.themoviedb.org/3";
 }

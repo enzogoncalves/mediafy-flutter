@@ -64,7 +64,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                   style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 18), foregroundColor: Colors.black, backgroundColor: Colors.white),
                   child: const Text(
-                    "Begin",
+                    "Start",
                   ),
                 ),
               )

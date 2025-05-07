@@ -1,0 +1,2 @@
+C:/Users/enzom/Documents/mediafy/android/app/.cxx/Debug/5n6m663t/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/enzom/Documents/mediafy/android/app/.cxx/Debug/5n6m663t/armeabi-v7a/CMakeFiles/rebuild_cache.dir
